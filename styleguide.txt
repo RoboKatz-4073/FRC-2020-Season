@@ -1,1 +1,19 @@
+Use tabs
+Use tabs
+Use tabs
 
+Format below comment block for every class: 
+
+/**
+* DESCRIPTION
+*
+* Please feel free to modify, share, and revise all code in this class
+* provided our name (FRC 4073), and all authors below are credited.
+*
+* @author <author(add more if necessary)>
+* 
+* @date_created <DATE>
+* @date_modified <DATE>
+*
+* @revision <REVISION #>
+**/
