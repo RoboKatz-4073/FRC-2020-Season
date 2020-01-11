@@ -2,7 +2,14 @@
 
 *************************************
 1 - Turn left (Default Value)
-1xxxxx - Turn left (Defined value after first digit)
+    1xxxxx - Turn left (Defined value after first digit)
 2 - Turn right (Default Value)
-2xxxxx - Turn right (Defined value after first digit)
-3-12 - Implement predefined commands ** Defined in future development)
+    2xxxxx - Turn right (Defined value after first digit)
+3 - The robot is too far left (Default Value)
+    3xxxxx - Adjustment
+4 - The robot is too far Right (Default Value)
+    4xxxxx - Adjustment
+5 - The color given from the FMS is detected. STOP ROTATION
+6 - Start Launch Wheel
+7 - Stop Launch Wheel
+*************************************
