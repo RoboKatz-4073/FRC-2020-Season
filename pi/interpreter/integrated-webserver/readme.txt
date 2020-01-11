@@ -1,1 +1,1 @@
-OK Boomer
+Will display basic information

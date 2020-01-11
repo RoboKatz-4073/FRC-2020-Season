@@ -1,4 +1,4 @@
-This folder will contain scripts for our Raspberry Pi Co-processors
+This folder will contain scripts/code for our Raspberry Pi Co-processors
 
 Inventory:
     2x Raspberry Pi 3B (For camera streaming)
