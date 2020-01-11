@@ -1,0 +1,8 @@
+#This file is a the code table for interpreting singals from the raspberry pi streamer
+
+*************************************
+1 - Turn left (Default Value)
+1xxxxx - Turn left (Defined value after first digit)
+2 - Turn right (Default Value)
+2xxxxx - Turn right (Defined value after first digit)
+3-12 - Implement predefined commands ** Defined in future development)
