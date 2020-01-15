@@ -1,4 +1,4 @@
-package com.Team4073.codes;
+package frc.robot.util;
 
 /*
 Table of codes sent to the RoboRIO
@@ -26,7 +26,7 @@ Format:
 @author josephtelaak
 */
 
-public interface datacodes {
+public interface Codelist {
     public static final int IDENTIFIER_CONSTANT = 9;        // Used to detect end of identifier
 
     public static final int TURN_LEFT = 1;                  // Values provided afterward

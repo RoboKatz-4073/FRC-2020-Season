@@ -1,4 +1,4 @@
-package com.Team4073.codes;
+package frc.robot.util;
 
 /*
 Class for the Communication code
@@ -8,14 +8,15 @@ Creates the code from information provided
 
 */
 
+import frc.robot.util.Codelist;
 
-public class CommunicationCode implements datacodes.java{
+public class COMMCode implements Codelist {
     private int DataPrefix;
     private int data;
-    
+
     private String Code;
 
-    public CommunicationCode (int DataPrefix, int data) {
+    public COMMCode(int DataPrefix, int data) {
         this.DataPrefix = DataPrefix;
         this.data = data;
 
@@ -28,34 +29,37 @@ public class CommunicationCode implements datacodes.java{
 
     public Integer[] decode(int code) {
         String tmp;
-        Strinf scode = code + "";
+        String scode = code + "";
 
         Integer[] codes = new Integer[2];
 
-        tmp = scode.substring(0, scode.find("9"));
-        codes[1] = Integer.ParseInt(tmp);
+        tmp = scode.substring(0, scode.indexOf("9"));
+        codes[1] = Integer.parseInt(tmp);
         tmp = "";
 
-        tmp = scode.substring(scode.find("9"), scode.length)
+        tmp = scode.substring(scode.indexOf("9"), scode.length());
+        codes[2] = Integer.parseInt(tmp);
+
+        return codes;
     }
 
     /*
-        Returns code generated in constructor
-    */
+     * Returns code generated in constructor
+     */
 
     public int GetCode() {
-        return Integer.ParseInt(Code);
+        return Integer.parseInt(Code);
     }
 
     /*
-        Bypasses constructor
-        Allows the creation of a code without the use of a new object
-    */
+     * Bypasses constructor Allows the creation of a code without the use of a new
+     * object
+     */
 
     public static int GetCode(int DataPrefix, int data) {
         String TmpCode = "" + DataPrefix + IDENTIFIER_CONSTANT + data;
-        
-        return Integer.ParseInt(TmpCode);
+
+        return Integer.parseInt(TmpCode);
     }
 
     public String toString() {

@@ -1,5 +1,21 @@
 package frc.robot;
 
+/**
+* Main robot class for our 2020 Season program testing platform
+* Much of this code will be transfered over to the competition robot
+*
+* Please feel free to modify, share, and revise all code in this class
+* provided our name (FRC 4073), and all authors below are credited.
+*
+* @author josephtelaak
+* @author hunterkuperman
+* 
+* @date_created 1/4/2020
+* @date_modified 1/15/2020
+*
+* @revision 05
+**/
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -216,20 +232,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public void spinAround(int type) {
-
-    // Spins around 180 Degrees
-    if (type == 1) {
-
-      // Activates all right motors
-      
-
-    } else {
-
-      // Activates all left motors
-      
-
-    }
-
-  }
 }
