@@ -1,8 +1,9 @@
-Use tabs
-Use tabs
-Use tabs
+1. Use tabs
+2. Place first curly brace after header (class/method/statement)
+3. Place last curly brace one line below last line of code (example included)
+4. Place line after header (class/method/statement)
 
-Format below comment block for every class: 
+Format below: 
 
 /**
 * DESCRIPTION
@@ -17,3 +18,39 @@ Format below comment block for every class:
 *
 * @revision <REVISION #>
 **/
+
+public class test {
+
+  /*
+  * DESCRIPTION
+  *
+  * @author <author(add more if necessary)>
+  * 
+  * @date_created <DATE>
+  * @date_modified <DATE>
+  *
+  * @revision <REVISION #>
+  *
+  * OTHER METHOD TAGS
+  */
+
+  public static void main(String[] args) {
+    
+    // Hold value describing my boomer status
+    boolean iamboomer = false;
+    
+    // Outputs a message depending on my boomer status
+    if (iamboomer) {
+    
+      // TRUE, I am a boomer
+      System.out.println("I am a boomer");
+      
+    } else {
+    
+      // ELSE / FALSE, I am not a boomer
+      System.out.println("I am not a boomer");
+     
+    }
+  }
+}
+  
