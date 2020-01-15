@@ -21,22 +21,22 @@ sudo mv motd /etc/
 sudo apt-get install apache2 -y
 
 # Motion
-
-cd /
-cd etc
-mkdir motion-tmp
-cd motion-tmp
-
-sudo apt-get install -y libjpeg62 libjpeg62-dev libavformat53 libavformat-dev libavcodec53 libavcodec-dev
-sudo apt-get install -y libavutil51 libavutil-dev libc6-dev zlib1g-dev libmysqlclient18 libmysqlclient-dev libpq5 libpq-dev
-
-sudo wget https://www.opsactive.com/wp-content/uploads/2013/11/motion-mmal.tar.gz
-sudo tar zxvf motion-mmal.tar.gz
-
-sudo apt-get install wput -y
-
-sudo mv motion-mmalcam.conf /etc/motion.conf
-sudo mv motion /usr/bin
+#
+#cd /
+#cd etc
+#mkdir motion-tmp
+#cd motion-tmp
+#
+#sudo apt-get install -y libjpeg62 libjpeg62-dev libavformat53 libavformat-dev libavcodec53 libavcodec-dev
+#sudo apt-get install -y libavutil51 libavutil-dev libc6-dev zlib1g-dev libmysqlclient18 libmysqlclient-dev libpq5 libpq-dev
+#
+#sudo wget https://www.opsactive.com/wp-content/uploads/2013/11/motion-mmal.tar.gz
+#sudo tar zxvf motion-mmal.tar.gz
+#
+#sudo apt-get install wput -y
+#
+#sudo mv motion-mmalcam.conf /etc/motion.conf
+#sudo mv motion /usr/bin
 
 # Install Java
 sudo add-apt-repository ppa:webupd8team/java
