@@ -23,8 +23,6 @@ public class RaspberryPi {
     // Connection information
     public String ipaddress;
     public int SSH_Port = 22;
-    
-    public String URL;
 
     public RaspberryPi (String userName, String password, String ipaddress) {
 
@@ -32,8 +30,6 @@ public class RaspberryPi {
         this.userName = userName;
         this.password = password;
         this.ipaddress = ipaddress;
-
-        URL = ipaddress;
 
     }
 
@@ -44,8 +40,6 @@ public class RaspberryPi {
         this.password = password;
         this.ipaddress = ipaddress;
         this.SSH_Port = SSH_Port;
-
-        URL = ipaddress = ":" + SSH_Port;
 
     }
 
