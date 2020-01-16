@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2004-2016 QOS.ch
+ * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.
  *
  * Permission is hereby granted, free  of charge, to any person obtaining
@@ -22,41 +22,41 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
+package org.slf4j.helpers;
 
-import java.util.List;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.atomic.AtomicLong;
+/**
+ * Holds the results of formatting done by {@link MessageFormatter}.
+ * 
+ * @author Joern Huxhorn
+ */
+public class FormattingTuple {
 
-public class LoggerAccessingThread extends Thread {
-    private static int LOOP_LEN = 64;
-    
-    final CyclicBarrier barrier;
-    final int count;
-    final AtomicLong eventCount;
-    List<Logger> loggerList;
-    
-    public LoggerAccessingThread(final CyclicBarrier barrier, List<Logger> loggerList, final int count, final AtomicLong eventCount) {
-        this.barrier = barrier;
-        this.loggerList = loggerList;
-        this.count = count;
-        this.eventCount = eventCount;
+    static public FormattingTuple NULL = new FormattingTuple(null);
+
+    private String message;
+    private Throwable throwable;
+    private Object[] argArray;
+
+    public FormattingTuple(String message) {
+        this(message, null, null);
     }
 
-    public void run() {
-        try {
-            barrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String loggerNamePrefix = this.getClass().getName();
-        for (int i = 0; i < LOOP_LEN; i++) {
-            Logger logger = LoggerFactory.getLogger(loggerNamePrefix + "-" + count + "-" + i);
-            loggerList.add(logger);
-            Thread.yield();
-            logger.info("in run method");
-            eventCount.getAndIncrement();
-        }
+    public FormattingTuple(String message, Object[] argArray, Throwable throwable) {
+        this.message = message;
+        this.throwable = throwable;
+        this.argArray = argArray;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Object[] getArgArray() {
+        return argArray;
+    }
+
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
 }

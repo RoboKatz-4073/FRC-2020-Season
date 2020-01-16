@@ -22,16 +22,42 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+package org.slf4j.helpers;
 
-package org.slf4j;
+import java.util.Map;
 
-import java.util.Random;
+import org.slf4j.spi.MDCAdapter;
 
-public class Differentiator {
+/**
+ * This adapter is an empty implementation of the {@link MDCAdapter} interface.
+ * It is used for all logging systems which do not support mapped
+ * diagnostic contexts such as JDK14, simple and NOP. 
+ * 
+ * @author Ceki G&uuml;lc&uuml;
+ * 
+ * @since 1.4.1
+ */
+public class NOPMDCAdapter implements MDCAdapter {
 
-    static Random random = new Random(System.currentTimeMillis());
-
-    static public short getDiffentiator() {
-        return (short) random.nextInt(Short.MAX_VALUE);
+    public void clear() {
     }
+
+    public String get(String key) {
+        return null;
+    }
+
+    public void put(String key, String val) {
+    }
+
+    public void remove(String key) {
+    }
+
+    public Map<String, String> getCopyOfContextMap() {
+        return null;
+    }
+
+    public void setContextMap(Map<String, String> contextMap) {
+        // NOP
+    }
+
 }

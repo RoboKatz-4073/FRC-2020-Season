@@ -24,35 +24,34 @@
  */
 package org.slf4j;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+/**
+ * <code>ILoggerFactory</code> instances manufacture {@link Logger}
+ * instances by name.
+ * 
+ * <p>Most users retrieve {@link Logger} instances through the static
+ * {@link LoggerFactory#getLogger(String)} method. An instance of this
+ * interface is bound internally with {@link LoggerFactory} class at 
+ * compile time. 
+ * 
+ * @author Ceki G&uuml;lc&uuml;
+ */
+public interface ILoggerFactory {
 
-import java.util.Random;
-
-import org.junit.Test;
-import org.slf4j.helpers.BasicMarker;
-import org.slf4j.helpers.NOPLogger;
-
-public class NoBindingTest {
-
-    int diff = new Random().nextInt(10000);
-
-    @Test
-    public void testLogger() {
-        Logger logger = LoggerFactory.getLogger(NoBindingTest.class);
-        logger.debug("hello" + diff);
-        assertTrue(logger instanceof NOPLogger);
-    }
-
-    @Test
-    public void testMDC() {
-        MDC.put("k" + diff, "v");
-        assertNull(MDC.get("k"));
-    }
-
-    @Test
-    public void testMarker() {
-        Marker m = MarkerFactory.getMarker("a" + diff);
-        assertTrue(m instanceof BasicMarker);
-    }
+    /**
+     * Return an appropriate {@link Logger} instance as specified by the
+     * <code>name</code> parameter.
+     * 
+     * <p>If the name parameter is equal to {@link Logger#ROOT_LOGGER_NAME}, that is 
+     * the string value "ROOT" (case insensitive), then the root logger of the 
+     * underlying logging system is returned.
+     * 
+     * <p>Null-valued name arguments are considered invalid.
+     *
+     * <p>Certain extremely simple logging systems, e.g. NOP, may always
+     * return the same logger instance regardless of the requested name.
+     * 
+     * @param name the name of the Logger to return
+     * @return a Logger instance 
+     */
+    public Logger getLogger(String name);
 }

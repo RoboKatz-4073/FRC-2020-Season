@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2004-2016 QOS.ch
+ * Copyright (c) 2004-2011 QOS.ch
  * All rights reserved.
  *
  * Permission is hereby granted, free  of charge, to any person obtaining
@@ -22,34 +22,36 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.slf4j;
+package org.slf4j.spi;
 
-import org.junit.After;
-import org.junit.Before;
-import org.slf4j.testHarness.MultithreadedInitializationTest;
+import org.slf4j.ILoggerFactory;
 
 /**
- * Checks that when no binding is present, proper clean up is performed by LoggerFactory.
+ * An internal interface which helps the static {@link org.slf4j.LoggerFactory} 
+ * class bind with the appropriate {@link ILoggerFactory} instance. 
  * 
- *  See SLF4J-469
- * 
- * @author David Harsha
+ * @author Ceki G&uuml;lc&uuml;
  */
-public class NoBindingMultithreadedInitializationTest extends MultithreadedInitializationTest {
-    final String loggerName = this.getClass().getName();
+public interface LoggerFactoryBinder {
 
-    @Before
-    public void setup() {
-        LoggerFactoryFriend.reset();
-    }
+    /**
+     * Return the instance of {@link ILoggerFactory} that 
+     * {@link org.slf4j.LoggerFactory} class should bind to.
+     * 
+     * @return the instance of {@link ILoggerFactory} that 
+     * {@link org.slf4j.LoggerFactory} class should bind to.
+     */
+    public ILoggerFactory getLoggerFactory();
 
-    @After
-    public void tearDown() throws Exception {
-        LoggerFactoryFriend.reset();
-    }
-
-    @Override
-    protected long getRecordedEventCount() {
-        return eventCount.get();
-    }
+    /**
+     * The String form of the {@link ILoggerFactory} object that this 
+     * <code>LoggerFactoryBinder</code> instance is <em>intended</em> to return. 
+     * 
+     * <p>This method allows the developer to interrogate this binder's intention
+     * which may be different from the {@link ILoggerFactory} instance it is able to 
+     * yield in practice. The discrepancy should only occur in case of errors.
+     * 
+     * @return the class name of the intended {@link ILoggerFactory} instance
+     */
+    public String getLoggerFactoryClassStr();
 }
