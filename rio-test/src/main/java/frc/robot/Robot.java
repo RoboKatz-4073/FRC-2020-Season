@@ -181,7 +181,7 @@ public class Robot extends TimedRobot {
       // Stop Rumble
       //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
-    } //else if (m_stickboi.getStartButton()) {
+    //} else if (m_stickboi.getStartButton()) {
 
       // Rumble controller and then wait for next action
       //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
@@ -192,7 +192,7 @@ public class Robot extends TimedRobot {
       // Stop Rumble
       //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
-    }
+    //}
 
     double Xstick = m_stickboi.getRawAxis(0) * Speed;
     double Ystick = m_stickboi.getRawAxis(1) * Speed;
