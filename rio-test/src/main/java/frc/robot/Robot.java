@@ -159,38 +159,38 @@ public class Robot extends TimedRobot {
       // Max Speed
       Speed = 1;
 
-    } else if (m_stickboi.getStartButton() && m_stickboi.getBackButton()) {
+    } //else if (m_stickboi.getStartButton() && m_stickboi.getBackButton()) {
 
       // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
       // Spins Left
-      spinAround(1);
+      //spinAround(1);
       
       // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
-    } else if (m_stickboi.getStartButton() && m_stickboi.getStartButton()) {
+    //} else if (m_stickboi.getStartButton() && m_stickboi.getStartButton()) {
 
       // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
       // Spins Right
-      spinAround(0);
+      //spinAround(0);
       
       // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
-    } else if (m_stickboi.getStartButton()) {
+    } //else if (m_stickboi.getStartButton()) {
 
       // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
       // Spins Right
-      spinAround(0);
+      //spinAround(0);
 
       // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
 
     }
 
