@@ -9,7 +9,7 @@ package frc.robot.commands;
 * @author josephtelaak
 * 
 * @date_created 1/15/2020
-* @date_modified 1/15/2020
+* @date_modified 1/16/2020
 *
 * @revision 01
 **/
@@ -27,7 +27,7 @@ public class R2D2 {
     private final String password = "Team4073!";
 
     // Pi communication class
-    public RaspiCOMM pi;
+    public RaspiCOMM pi_comm;
 
     // Thread to keep beeping controll separated
     private Thread r2d2;
@@ -40,7 +40,7 @@ public class R2D2 {
         pi.setPassword(password);
 
         // Establish connection
-        this.pi = new RaspiCOMM(pi);
+        pi_comm = new RaspiCOMM(pi);
 
         // Beep-beep thread
         r2d2 = new Thread(() -> {
@@ -77,9 +77,16 @@ public class R2D2 {
         // Kill thread
         r2d2.interrupt();
 
+        // Stop ssh connection
+        pi_comm.disconnect();
+
     }
 
     private void beepboop() {
+
+        // Send beepboop
+        pi_comm.sendCommand("mplayer r2d2.ogg");
+
     }
 
 }
