@@ -2,31 +2,30 @@
 Code for FRC 2020 Season
 This year we are using Java in the VSCode IDE
 
-#Credits
-Mr. Ernest: Main Mentor
-Mr. Layton: Mentor
-Mr. Boggs: Mentor/Resident Engineering Expert
+## Credits
+1. Mr. Ernest: Main Mentor
+1. Mr. Layton: Mentor
+1. Mr. Boggs: Mentor/Resident Engineering Expert
 
-Engineering Team:
-    Andrew Vaughan: Engineering Capitan
-        Ian Aldrich: Sr. Engineer
-            Connor Kiggins: Engineer
-            Van Tran: Engineer
-            Christian: Engineer
-            Julio: Engineer
-            Adam Pauly: Engineer
-        Adam Pauly: Lead Designer
-        Ryan Bao: Lead Builder
-            Connor Kiggins: Builder
-            Triniti Starnes: Builder
-            Olivia Wright: Builder
+#### Engineering Team:
+1. Andrew Vaughan: Engineering Capitan
+    * Ian Aldrich: Sr. Engineer
+    * Connor Kiggins: Engineer
+    * Van Tran: Engineer
+    * Christian: Engineer
+    * Julio: Engineer
+    * Adam Pauly: Engineer
+1. Adam Pauly: Lead Designer
+1. Ryan Bao: Lead Builder
+    * Connor Kiggins: Builder
+    * Triniti Starnes: Builder
+    * Olivia Wright: Builder
 
-Electronics Team:
-    Joseph Telaak: Lead Electrician
-        Ryan Bao: Asst. Electrician
+#### Electronics Team:
+1. Joseph Telaak: Lead Electrician
+    * Ryan Bao: Asst. Electrician
 
-Programming Team:
-    Joseph Telaak: Sr. Programmer - JAVA
-    Hunter Kuperman: Sr. Programmer - JAVA
-    Van Tran: Web Dev.
-        Hunter Kuperman: Supp. Web Dev
+#### Programming Team:
+1. Joseph Telaak: Sr. Programmer - JAVA
+1. Hunter Kuperman: Sr. Programmer - JAVA
+1. Van Tran: Web Dev.
