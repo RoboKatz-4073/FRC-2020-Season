@@ -1,5 +1,5 @@
 # FRC-2020-Season
-Code for FRC 2020 Season
+Code for FRC 2020 Season <br>
 This year we are using Java in the VSCode IDE
 
 ## Credits
@@ -28,6 +28,6 @@ This year we are using Java in the VSCode IDE
     * Ryan Bao: Asst. Electrician
 
 #### Programming Team:
-1. Joseph Telaak: Sr. Programmer - JAVA
-1. Hunter Kuperman: Sr. Programmer - JAVA
+1. Joseph Telaak: Sr. Programmer - JAVA   @The1TrueJoe
+1. Hunter Kuperman: Sr. Programmer - JAVA    @hkuperman42
 1. Van Tran: Web Dev.
