@@ -5,7 +5,7 @@ This year we are using Java in the VSCode IDE
 ## Credits
 
 #### Mentors
-1. Mr. Ernest: Main Mentor
+1. Mr. Ernest: Main Mentor/Team Sponsor
 1. Mr. Layton: Mentor
 1. Mr. Boggs: Mentor
 
