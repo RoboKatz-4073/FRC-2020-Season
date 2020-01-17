@@ -3,6 +3,8 @@ Code for FRC 2020 Season
 This year we are using Java in the VSCode IDE
 
 ## Credits
+
+#### Mentors
 1. Mr. Ernest: Main Mentor
 1. Mr. Layton: Mentor
 1. Mr. Boggs: Mentor/Resident Engineering Expert
