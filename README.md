@@ -7,7 +7,7 @@ This year we are using Java in the VSCode IDE
 #### Mentors
 1. Mr. Ernest: Main Mentor
 1. Mr. Layton: Mentor
-1. Mr. Boggs: Mentor/Resident Engineering Expert
+1. Mr. Boggs: Mentor
 
 #### Engineering Team:
 1. Andrew Vaughan: Engineering Capitan
@@ -25,7 +25,6 @@ This year we are using Java in the VSCode IDE
 
 #### Electronics Team:
 1. Joseph Telaak: Lead Electrician
-    * Ryan Bao: Asst. Electrician
 
 #### Programming Team:
 1. Joseph Telaak: Sr. Programmer - JAVA
