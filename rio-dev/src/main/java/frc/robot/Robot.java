@@ -29,7 +29,10 @@ import java.util.concurrent.TimeUnit;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.commands.Spin;
+
 import com.revrobotics.ColorSensorV3;
 
 public class Robot extends TimedRobot {
@@ -37,6 +40,9 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  // Set default operation mode
+  private int operationMode = 1;    // 1 = Xbox Controller, 2 = Aim Controller
 
   // Xbox Controller
   private XboxController m_stickboi;
@@ -131,13 +137,32 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
+
+
+
+
+
+    if (operationMode == 1) {
+
+      teleopOperationModeOne();
+
+    } else if (operationMode == 2) {
+
+      teleopOperationModeTwo();
+
+    }
+    
+  }
+
+  public void teleopOperationModeOne() {
+
     double Speed = 0.50;
 
     // Macros
     if (m_stickboi.getYButton()) {
 
       // 15% Speed
-      Speed = 0.15;
+      Speed = 0.50;
 
     } else if (m_stickboi.getBButton()) {
 
@@ -147,7 +172,7 @@ public class Robot extends TimedRobot {
     } else if (m_stickboi.getAButton()) {
 
       // 75% Speed
-      Speed = 0.75;
+      Speed = 0.15;
 
     } else if (m_stickboi.getXButton()) {
 
@@ -180,11 +205,84 @@ public class Robot extends TimedRobot {
     LeftBack.set(ControlMode.PercentOutput, -XX);
 
     } else {
+
     RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
     LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
     RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
     LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
+
     }
+
+  }
+
+  public void teleopOperationModeTwo() {
+
+    // Default speed
+    double Speed = .10;
+
+    // Macros
+    if (m_bigstickboi.getRawButton(6) || m_bigstickboi.getRawButton(3)) {
+
+      Speed = 1;
+
+    } else if (m_bigstickboi.getRawButton(7)) {
+
+      Speed = .15;
+
+    } else if (m_bigstickboi.getRawButton(10)) {
+
+      Speed = .25;
+
+    } else if (m_bigstickboi.getRawButton(12)) {
+
+      Speed = .5;
+
+    } else if (m_bigstickboi.getRawButton(2)) {
+
+      Spin.Spin180(1);
+
+    } else if (m_bigstickboi.getRawButton(4)) {
+
+      Spin.Spin90(2);
+
+    } else if (m_bigstickboi.getRawButton(5)) {
+
+      Spin.Spin90(1);
+
+    }
+    
+    double Xstick = m_bigstickboi.getRawAxis(0) * Speed;
+    double Ystick = m_bigstickboi.getRawAxis(1) * Speed;
+    double XX     = m_bigstickboi.getRawAxis(4) * Speed;
+
+     if (Ystick < 0.2 && Ystick > -0.2) {
+
+      Ystick = 0;
+
+    }
+
+    if (Xstick < 0.2 && Xstick > -0.2) {
+
+      Xstick = 0;
+
+    } 
+
+    if (m_stickboi.getRawAxis(4) > 0.2 || m_stickboi.getRawAxis(4) < -0.2) {
+
+    RightFront.set(ControlMode.PercentOutput, XX);
+    LeftFront.set(ControlMode.PercentOutput, XX);
+    RightBack.set(ControlMode.PercentOutput, -XX * 1.07);
+    LeftBack.set(ControlMode.PercentOutput, -XX);
+
+    } else {
+
+    RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
+    LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
+    RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
+    LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
+    
+    }
+
   }
 
   /**
