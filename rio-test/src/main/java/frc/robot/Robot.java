@@ -41,6 +41,12 @@ public class Robot extends TimedRobot {
   // Xbox Controller
   private XboxController m_stickboi;
 
+  // Logitech Joystick Controller
+  private Joystick m_bigstickboi;
+
+  // PXN Controller
+  private XboxController m_buttonboi;
+
   // I2C Port on the RoboRIO
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
@@ -63,8 +69,10 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    // Initialize XBox Controller
-    m_stickboi = new XboxController(0);
+    // Initialize Controllers
+    m_stickboi    = new XboxController(0);
+    m_bigstickboi = new Joystick(1);
+    m_buttonboi   = new XboxController(2);
 
     // Set Output Levels
     RightFront.set(ControlMode.PercentOutput, 0);
