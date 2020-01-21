@@ -31,5 +31,6 @@ Logitech Joystick:
 	5:  Turn 90 Right
 	6:  100% Speed
 	7:  15% Speed
-	11: 50% Speed
 	10: 25% Speed
+	11: 50% Speed
+	

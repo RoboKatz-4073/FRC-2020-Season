@@ -9,7 +9,7 @@ package frc.robot.commands;
 * @author josephtelaak
 * 
 * @date_created 1/15/2020
-* @date_modified 1/16/2020
+* @date_modified 1/21/2020
 *
 * @revision 01
 **/
@@ -33,7 +33,9 @@ public class R2D2 {
     private Thread r2d2;
 
     // Constructor
-    public R2D2(RaspberryPi pi) {
+    public R2D2(RaspberryPi arg_pi) {
+
+        RaspberryPi pi = arg_pi;
 
         // Modify pi config for user
         pi.setUser(userName);
@@ -82,7 +84,7 @@ public class R2D2 {
 
     }
 
-    private void beepboop() {
+    public void beepboop() {
 
         // Send beepboop
         pi_comm.sendCommand("mplayer r2d2.ogg");

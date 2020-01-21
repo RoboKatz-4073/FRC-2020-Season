@@ -25,8 +25,11 @@ public class RaspiCOMM {
     
     public RaspiCOMM(RaspberryPi pi) {
 
+        // Create object
         this.pi = pi;
 
+        // Establish Connection
+        initialize();
     }
 
     public RaspiCOMM(String userName, String password, String ipaddress) {
