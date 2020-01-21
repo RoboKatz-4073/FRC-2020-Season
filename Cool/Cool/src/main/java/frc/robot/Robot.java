@@ -1,3 +1,8 @@
+/*
+@author hunterkuperman
+@author josephtelaak
+*/
+
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -33,6 +38,11 @@ public class Robot extends TimedRobot {
   TalonSRX LeftFront  = new TalonSRX(1); 
   TalonSRX RightBack  = new TalonSRX(2); 
   TalonSRX LeftBack   = new TalonSRX(3); 
+
+  public double Red;
+  public double Blue;
+  public double Green;
+  public String colorboi;
 
   // Create Color Sensor Object  **THIS IS TEMPORARY)
   public final ColorSensorV3 m_Color = new ColorSensorV3(i2cPort);
@@ -117,10 +127,36 @@ public class Robot extends TimedRobot {
         // Grab color
         Color dColor = m_Color.getColor();
 
+       Red   = dColor.red;
+       Blue  = dColor.blue;
+       Green = dColor.green;
+
+       if (Red <= 0.23 && Green >= 0.5 && Blue >= 0.19) {
+
+        colorboi = "Green";
+
+       } else if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
+
+        colorboi = "Blue";
+
+       } else if (Red >= 0.4 && Green >= 0.3 && Green <= 0.45 && Blue <= 0.19) {
+
+        colorboi = "Red";
+
+       } else if (Red >= 0.27 && Green >= 0.5 && Blue >= 0.09 && Blue <= 0.18) {
+
+        colorboi = "Yellow";
+
+       } else {
+         colorboi = "Grey";
+       }
+
         // Display Color Values on DriverStation
         SmartDashboard.putNumber("Red", dColor.red);
         SmartDashboard.putNumber("Green", dColor.green);
         SmartDashboard.putNumber("Blue", dColor.blue);
+
+        SmartDashboard.putString("Color", colorboi);
 
     // Macros
     if (m_stickboi.getYButton()) {
