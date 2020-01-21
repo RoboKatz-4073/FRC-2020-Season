@@ -41,6 +41,12 @@ public class Robot extends TimedRobot {
   // Xbox Controller
   private XboxController m_stickboi;
 
+  // Logitech Joystick Controller
+  private Joystick m_bigstickboi;
+
+  // PXN Controller
+  private XboxController m_buttonboi;
+
   // I2C Port on the RoboRIO
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
 
@@ -63,8 +69,10 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    // Initialize XBox Controller
-    m_stickboi = new XboxController(0);
+    // Initialize Controllers
+    m_stickboi    = new XboxController(0);
+    m_bigstickboi = new Joystick(1);
+    m_buttonboi   = new XboxController(2);
 
     // Set Output Levels
     RightFront.set(ControlMode.PercentOutput, 0);
@@ -75,12 +83,7 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * Called every robot packet
    */
   @Override
   public void robotPeriodic() {
@@ -96,15 +99,7 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
+   * Autonomous Initialization
    */
   @Override
   public void autonomousInit() {
@@ -159,40 +154,7 @@ public class Robot extends TimedRobot {
       // Max Speed
       Speed = 1;
 
-    } //else if (m_stickboi.getStartButton() && m_stickboi.getBackButton()) {
-
-      // Rumble controller and then wait for next action
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Left
-      //spinAround(1);
-      
-      // Stop Rumble
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-    //} else if (m_stickboi.getStartButton() && m_stickboi.getStartButton()) {
-
-      // Rumble controller and then wait for next action
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Right
-      //spinAround(0);
-      
-      // Stop Rumble
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-    //} else if (m_stickboi.getStartButton()) {
-
-      // Rumble controller and then wait for next action
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Right
-      //spinAround(0);
-
-      // Stop Rumble
-      //m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-    //}
+    }
 
     double Xstick = m_stickboi.getRawAxis(0) * Speed;
     double Ystick = m_stickboi.getRawAxis(1) * Speed;
