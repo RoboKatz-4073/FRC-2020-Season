@@ -29,6 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.Color;
@@ -80,10 +83,17 @@ public class Robot extends TimedRobot {
   private RaspiCOMM control;
 
   // Create Talon SRX Motor Controller Objects
-  TalonSRX RightFront = new TalonSRX(4);
-  TalonSRX LeftFront  = new TalonSRX(1); 
-  TalonSRX RightBack  = new TalonSRX(2); 
-  TalonSRX LeftBack   = new TalonSRX(3); 
+  private TalonSRX RightFront = new TalonSRX(4);
+  private TalonSRX LeftFront  = new TalonSRX(1); 
+  private TalonSRX RightBack  = new TalonSRX(2); 
+  private TalonSRX LeftBack   = new TalonSRX(3); 
+
+  // Array of Talons
+  private TalonSRX[] MotorControllers = new TalonsSRX[3];
+
+  // Built-in sensors
+  private AnalogGyro m_locationboi;
+  private BuiltInAccelerometer m_speedboi;
 
   // Create Color Sensor Object  **THIS IS TEMPORARY)
   public final ColorSensorV3 m_Color = new ColorSensorV3(i2cPort);
@@ -123,6 +133,20 @@ public class Robot extends TimedRobot {
     RightBack.set(ControlMode.PercentOutput, 0);
     LeftBack.set(ControlMode.PercentOutput, 0);
 
+    // Add sensors
+    m_locationboi = new AnalogGyro(0);
+    m_speedboi = new BuiltInAccelerometer();
+
+    // Initialize Gyro
+    m_locationboi.initGyro();
+    m_locationboi.calibrate();
+
+    // Add motors to array
+    MotorControllers[0] = RightFront;
+    MotorControllers[1] = LeftFront;
+    MotorControllers[2] = RightBack;
+    MotorControllers[3] = LeftBack;
+
   }
 
   /**
@@ -131,8 +155,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     
-    // Grab color
-    Color dColor = m_Color.getColor();
+  // Grab color
+  Color dColor = m_Color.getColor();
+
+  // Display acceleration data
+  SmartDashboard.putNumber("X", m_speedboi.getX());
+  SmartDashboard.putNumber("Y", m_speedboi.getY());
+  SmartDashboard.putNumber("Z", m_speedboi.getZ());
+
+  // Display Gyro data
+  SmartDashboard.putNumber("", m_locationboi.getAngle());
 
   // Display Color Values on DriverStation
   SmartDashboard.putNumber("Red", dColor.red);
@@ -174,11 +206,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     
-
-
-
-
-
     if (operationMode == 1) {
 
       teleopOperationModeOne();
