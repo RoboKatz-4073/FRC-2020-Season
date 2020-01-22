@@ -15,10 +15,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.commands.Spin;
+
 import com.revrobotics.ColorSensorV3;
 
 public class Robot extends TimedRobot {
@@ -47,6 +51,9 @@ public class Robot extends TimedRobot {
   // Create Color Sensor Object  **THIS IS TEMPORARY)
   public final ColorSensorV3 m_Color = new ColorSensorV3(i2cPort);
 
+  // Sensors
+  private AnalogGyro m_locationboi;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -59,6 +66,16 @@ public class Robot extends TimedRobot {
 
     // Initialize XBox Controller
     m_stickboi = new XboxController(0);
+
+    // Create Gyro
+    m_locationboi = new AnalogGyro(0);
+  
+    // Initialize Gyro
+    m_locationboi.initGyro();
+    m_locationboi.calibrate();
+
+    // Add Gyro to Spin
+    Spin.addGyro(m_locationboi);
 
     // Set Output Levels
     RightFront.set(ControlMode.PercentOutput, 0);
@@ -78,6 +95,40 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    // Grab color
+    Color dColor = m_Color.getColor();
+
+    Red   = dColor.red;
+    Blue  = dColor.blue;
+    Green = dColor.green;
+
+    if (Red <= 0.23 && Green >= 0.5 && Blue >= 0.19) {
+
+     colorboi = "Green";
+
+    } else if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
+
+     colorboi = "Blue";
+
+    } else if (Red >= 0.4 && Green >= 0.3 && Green <= 0.45 && Blue <= 0.19) {
+
+     colorboi = "Red";
+
+    } else if (Red >= 0.27 && Green >= 0.5 && Blue >= 0.09 && Blue <= 0.18) {
+
+     colorboi = "Yellow";
+
+    } else {
+      colorboi = "Grey";
+    }
+
+    // Display Color Values on DriverStation
+    SmartDashboard.putNumber("Red", dColor.red);
+    SmartDashboard.putNumber("Green", dColor.green);
+    SmartDashboard.putNumber("Blue", dColor.blue);
+
+    SmartDashboard.putString("Color", colorboi);
 
   }
 
@@ -124,40 +175,6 @@ public class Robot extends TimedRobot {
     
     double Speed = 0.50;
 
-        // Grab color
-        Color dColor = m_Color.getColor();
-
-       Red   = dColor.red;
-       Blue  = dColor.blue;
-       Green = dColor.green;
-
-       if (Red <= 0.23 && Green >= 0.5 && Blue >= 0.19) {
-
-        colorboi = "Green";
-
-       } else if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
-
-        colorboi = "Blue";
-
-       } else if (Red >= 0.4 && Green >= 0.3 && Green <= 0.45 && Blue <= 0.19) {
-
-        colorboi = "Red";
-
-       } else if (Red >= 0.27 && Green >= 0.5 && Blue >= 0.09 && Blue <= 0.18) {
-
-        colorboi = "Yellow";
-
-       } else {
-         colorboi = "Grey";
-       }
-
-        // Display Color Values on DriverStation
-        SmartDashboard.putNumber("Red", dColor.red);
-        SmartDashboard.putNumber("Green", dColor.green);
-        SmartDashboard.putNumber("Blue", dColor.blue);
-
-        SmartDashboard.putString("Color", colorboi);
-
     // Macros
     if (m_stickboi.getYButton()) {
 
@@ -179,38 +196,9 @@ public class Robot extends TimedRobot {
       // Max Speed
       Speed = 1;
 
-    } else if (m_stickboi.getStartButton() && m_stickboi.getBackButton()) {
-
-      // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Left
-      spinAround(1);
-      
-      // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-    } else if (m_stickboi.getStartButton() && m_stickboi.getStartButton()) {
-
-      // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Right
-      spinAround(0);
-      
-      // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
     } else if (m_stickboi.getStartButton()) {
 
-      // Rumble controller and then wait for next action
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
-
-      // Spins Right
-      spinAround(0);
-
-      // Stop Rumble
-      m_stickboi.setRumble(RumbleType.kRightRumble, 1);
+      Spin.Spin180(1);
 
     }
 
@@ -252,20 +240,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public void spinAround(int type) {
-
-    // Spins around 180 Degrees
-    if (type == 1) {
-
-      // Activates all right motors
-      
-
-    } else {
-
-      // Activates all left motors
-      
-
-    }
-
-  }
 }
