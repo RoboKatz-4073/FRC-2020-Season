@@ -361,6 +361,41 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+
+    double speed = .25;
+
+    double Xstick = m_stickboi.getRawAxis(0) * Speed;
+    double Ystick = m_stickboi.getRawAxis(1) * Speed;
+    double XX     = m_stickboi.getRawAxis(4) * Speed;
+
+     if (Ystick < 0.2 && Ystick > -0.2) {
+
+      Ystick = 0;
+
+    }
+
+    if (Xstick < 0.2 && Xstick > -0.2) {
+
+      Xstick = 0;
+
+    } 
+
+    if (m_stickboi.getRawAxis(4) > 0.2 || m_stickboi.getRawAxis(4) < -0.2) {
+
+    RightFront.set(ControlMode.PercentOutput, XX);
+    LeftFront.set(ControlMode.PercentOutput, XX);
+    RightBack.set(ControlMode.PercentOutput, -XX * 1.07);
+    LeftBack.set(ControlMode.PercentOutput, -XX);
+
+    } else {
+
+    RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
+    LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
+    RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
+    LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
+
+    }
+
   }
 
 }
