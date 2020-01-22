@@ -7,7 +7,6 @@ XBOX-360 Controller:
 	Y: 50% Speed
 	B: 25% Speed
 	A: 15% Speed
-	XBOX: BeepBoop
 	LT: Bring Up
 	RT: Fire
 	Rumble: Lined-Up
@@ -18,9 +17,6 @@ PXN Gamepad:
 	Y: Driver 2 Control (Non-XBOX)
 	B: Driver 1 Control (XBOX)
 	A: Fire Ball
-	SL: Enable Camera
-	SR: Disable Camera
-	Home: BeepBoop
 
 Logitech Joystick:
 	Stick: Precision Control (Speed Reduced)

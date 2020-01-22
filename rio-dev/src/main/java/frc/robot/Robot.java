@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   private TalonSRX LeftBack   = new TalonSRX(3); 
 
   // Array of Talons
-  private TalonSRX[] MotorControllers = new TalonsSRX[3];
+  private TalonSRX[] MotorControllers = new TalonSRX[3];
 
   // Built-in sensors
   private AnalogGyro m_locationboi;
@@ -205,6 +205,16 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
+    if (m_buttonboi.getYButton()) {
+
+      operationMode = 2;
+
+    } else if (m_buttonboi.getBButton()) {
+
+      operationMode = 1;
+
+    }
     
     if (operationMode == 1) {
 
@@ -213,6 +223,12 @@ public class Robot extends TimedRobot {
     } else if (operationMode == 2) {
 
       teleopOperationModeTwo();
+
+    }
+
+    if (m_buttonboi.getAButton()) {
+
+    } else if (m_buttonboi.getXButton()) {
 
     }
     
