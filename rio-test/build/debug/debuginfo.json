@@ -5,5 +5,12 @@
     "debugfile": "frcJava_roborio.debugconfig",
     "project": "Cool",
     "language": "java"
+  },
+  {
+    "artifact": "frcJava (in project rio-test)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "rio-test",
+    "language": "java"
   }
 ]
