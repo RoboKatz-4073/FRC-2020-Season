@@ -65,11 +65,28 @@ public class RaspberryPi {
     }
 
     // Return information
-    public String getUser() { return userName; }
-    public String getIPAddress() { return ipaddress; }
-    public String getPassword() { return password; }
-    public String getURL() { return URL; }
+    public String getUser() { 
+        
+        return userName; 
+    
+    }
 
-    public int getPort() { return SSH_Port; }
+    public String getIPAddress() { 
+        
+        return ipaddress; 
+    
+    }
+
+    public String getPassword() { 
+        
+        return password; 
+    
+    }
+
+    public int getPort() { 
+        
+        return SSH_Port; 
+    
+    }
 
 }

@@ -23,9 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-
-import java.util.concurrent.TimeUnit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -40,13 +37,9 @@ import frc.robot.util.RaspberryPi;
 
 import com.revrobotics.ColorSensorV3;
 
-import frc.robot.util.RaspberryPi;
 import frc.robot.util.RaspiCOMM;
 
 import frc.robot.commands.R2D2;
-import frc.robot.commands.Wakeup;
-import frc.robot.commands.Spin;
-
 
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";

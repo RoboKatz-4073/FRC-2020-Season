@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import java.io.IOException;
+
 /**
 * This is the class for communication with our various Raspberry Pi's
 *
@@ -15,6 +17,10 @@ package frc.robot.util;
 **/
 
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
+import net.schmizz.sshj.transport.TransportException;
 
 public class RaspiCOMM {
 
@@ -22,7 +28,7 @@ public class RaspiCOMM {
     private Session session;
 
     private RaspberryPi pi;
-    
+
     public RaspiCOMM(RaspberryPi pi) {
 
         // Create object
@@ -54,14 +60,22 @@ public class RaspiCOMM {
 
     // Establish ssh session
     private void initialize() {
-        
+
         // Create client
         ssh = new SSHClient();
 
         // Load information and connect
-        ssh.loadKnownHosts();
-        ssh.connect(pi.userName, pi.SSH_Port);
-        ssh.authPassword(pi.ipaddress, pi.password);
+        try {
+
+            ssh.loadKnownHosts();
+            ssh.connect(pi.userName, pi.SSH_Port);
+            ssh.authPassword(pi.ipaddress, pi.password);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
 
     }
 
@@ -69,19 +83,38 @@ public class RaspiCOMM {
     public void disconnect() {
 
         // Disconnect Session
-        session.close();
-        ssh.disconnect();
+        try {
+
+            session.close();
+            ssh.disconnect();
+            
+        } catch (TransportException | ConnectionException e) {
+           
+            e.printStackTrace();
+        
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+            
+        }
+
+        
 
     }
 
     // Pass through commands
-    public String sendCommand(String command) {
+    public void sendCommand(String command) {
 
         // Run command
-        Command cmd = session.exec(command);
+        try {
 
-        // Return output
-        return cmd.getOutputAsString();
+            session.exec(command);
+
+        } catch (ConnectionException | TransportException e) {
+
+            e.printStackTrace();
+
+        }
 
     }
 }
