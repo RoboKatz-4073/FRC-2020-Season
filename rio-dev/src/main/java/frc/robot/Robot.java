@@ -218,10 +218,12 @@ public class Robot extends TimedRobot {
     
     if (operationMode == 1) {
 
+      SmartDashboard.putString("Mode", "Chassis Driver");
       teleopOperationModeOne();
 
     } else if (operationMode == 2) {
 
+      SmartDashboard.putString("Mode", "Game-Piece Driver");
       teleopOperationModeTwo();
 
     }
@@ -378,7 +380,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
-    double speed = .25;
+    double Speed = .25;
 
     double Xstick = m_stickboi.getRawAxis(0) * Speed;
     double Ystick = m_stickboi.getRawAxis(1) * Speed;
