@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 import java.util.concurrent.TimeUnit;
@@ -20,8 +21,8 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.commands.Spin;
 
 import com.revrobotics.ColorSensorV3;
 
@@ -33,6 +34,12 @@ public class Robot extends TimedRobot {
 
   // Xbox Controller
   private XboxController m_stickboi;
+
+  // Logitech Joystick Controller
+  private Joystick m_bigstickboi;
+
+  // PXN Controller
+  private XboxController m_buttonboi;
 
   // I2C Port on the RoboRIO
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
@@ -54,6 +61,9 @@ public class Robot extends TimedRobot {
   // Sensors
   private AnalogGyro m_locationboi;
 
+  // Operation mode
+  private double operationMode = 1;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -64,8 +74,10 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    // Initialize XBox Controller
-    m_stickboi = new XboxController(0);
+    // Initialize Controllers
+    m_stickboi    = new XboxController(0);
+    m_bigstickboi = new Joystick(1);
+    m_buttonboi   = new XboxController(2);
 
     // Create Gyro
     m_locationboi = new AnalogGyro(0);
@@ -75,7 +87,7 @@ public class Robot extends TimedRobot {
     m_locationboi.calibrate();
 
     // Add Gyro to Spin
-    Spin.addGyro(m_locationboi);
+    //Spin.addGyro(m_locationboi);
 
     // Set Output Levels
     RightFront.set(ControlMode.PercentOutput, 0);
@@ -170,68 +182,68 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
-  @Override
-  public void teleopPeriodic() {
-    
-    double Speed = 0.50;
-
-    // Macros
-    if (m_stickboi.getYButton()) {
-
-      // 15% Speed
-      Speed = 0.15;
-
-    } else if (m_stickboi.getBButton()) {
-
-      // 25% Speed
-      Speed = 0.25;
-
-    } else if (m_stickboi.getAButton()) {
-
-      // 75% Speed
-      Speed = 0.75;
-
-    } else if (m_stickboi.getXButton()) {
-
-      // Max Speed
-      Speed = 1;
-
-    } else if (m_stickboi.getStartButton()) {
-
-      Spin.Spin180(1);
-
-    }
-
-    double Xstick = m_stickboi.getRawAxis(0) * Speed;
-    double Ystick = m_stickboi.getRawAxis(1) * Speed;
-    double XX     = m_stickboi.getRawAxis(4) * Speed;
-
-     if (Ystick < 0.2 && Ystick > -0.2) {
-
-      Ystick = 0;
-
-    }
-
-    if (Xstick < 0.2 && Xstick > -0.2) {
-
-      Xstick = 0;
-
-    } 
-
-    if (m_stickboi.getRawAxis(4) > 0.2 || m_stickboi.getRawAxis(4) < -0.2) {
-
-    RightFront.set(ControlMode.PercentOutput, XX);
-    LeftFront.set(ControlMode.PercentOutput, XX);
-    RightBack.set(ControlMode.PercentOutput, -XX * 1.07);
-    LeftBack.set(ControlMode.PercentOutput, -XX);
-
-    } else {
-    RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
-    LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
-    RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
-    LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
-    }
-  }
+//  @Override
+//  public void teleopPeriodic() {
+//    
+//    double Speed = 0.50;
+//
+//    // Macros
+//    if (m_stickboi.getYButton()) {
+//
+//      // 15% Speed
+//      Speed = 0.15;
+//
+//    } else if (m_stickboi.getBButton()) {
+//
+//      // 25% Speed
+//      Speed = 0.25;
+//
+//    } else if (m_stickboi.getAButton()) {
+//
+//      // 75% Speed
+//      Speed = 0.75;
+//
+//    } else if (m_stickboi.getXButton()) {
+//
+//      // Max Speed
+//      Speed = 1;
+//
+//    } else if (m_stickboi.getStartButton()) {
+//
+//      Spin.Spin180(1);
+//
+//    }
+//
+//    double Xstick = m_stickboi.getRawAxis(0) * Speed;
+//    double Ystick = m_stickboi.getRawAxis(1) * Speed;
+//    double XX     = m_stickboi.getRawAxis(4) * Speed;
+//
+//     if (Ystick < 0.2 && Ystick > -0.2) {
+//
+//      Ystick = 0;
+//
+//    }
+//
+//    if (Xstick < 0.2 && Xstick > -0.2) {
+//
+//      Xstick = 0;
+//
+//    } 
+//
+//    if (m_stickboi.getRawAxis(4) > 0.2 || m_stickboi.getRawAxis(4) < -0.2) {
+//
+//    RightFront.set(ControlMode.PercentOutput, XX);
+//    LeftFront.set(ControlMode.PercentOutput, XX);
+//    RightBack.set(ControlMode.PercentOutput, -XX * 1.07);
+//    LeftBack.set(ControlMode.PercentOutput, -XX);
+//
+//    } else {
+//    RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
+//    LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
+//    RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
+//    LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
+//    }
+//  }
 
   /**
    * This function is called periodically during test mode.
@@ -292,10 +304,12 @@ public class Robot extends TimedRobot {
     
     if (operationMode == 1) {
 
+      SmartDashboard.putString("Mode", "Chassis Driver");
       teleopOperationModeOne();
 
     } else if (operationMode == 2) {
 
+      SmartDashboard.putString("Mode", "Game-Piece Driver");
       teleopOperationModeTwo();
 
     }
@@ -336,17 +350,12 @@ public class Robot extends TimedRobot {
     } else if (m_stickboi.getBumper(Hand.kRight)) {
 
       // Spin
-      Spin.Spin180(1);
+      //Spin.Spin180(1);
 
     } else if (m_stickboi.getBumper(Hand.kLeft)) {
 
       // Spin
-      Spin.Spin180(2);
-
-    } else if (m_stickboi.getStartButton()) {
-
-      // BeepBoop
-      BeepBoop.beepboop();
+      //Spin.Spin180(2);
 
     } else if (Math.round(m_stickboi.getTriggerAxis(Hand.kRight)) == 1) {
 
@@ -412,15 +421,15 @@ public class Robot extends TimedRobot {
 
     } else if (m_bigstickboi.getRawButton(2)) {
 
-      Spin.Spin180(1);
+      //Spin.Spin180(1);
 
     } else if (m_bigstickboi.getRawButton(4)) {
 
-      Spin.Spin90(2);
+      //Spin.Spin90(2);
 
     } else if (m_bigstickboi.getRawButton(5)) {
 
-      Spin.Spin90(1);
+      //Spin.Spin90(1);
 
     }
     
@@ -454,9 +463,9 @@ public class Robot extends TimedRobot {
 
     double speed = .25;
 
-    double Xstick = m_stickboi.getRawAxis(0) * Speed;
-    double Ystick = m_stickboi.getRawAxis(1) * Speed;
-    double XX     = m_stickboi.getRawAxis(4) * Speed;
+    double Xstick = m_stickboi.getRawAxis(0);
+    double Ystick = m_stickboi.getRawAxis(1);
+    double XX     = m_stickboi.getRawAxis(4);
 
      if (Ystick < 0.2 && Ystick > -0.2) {
 
@@ -487,3 +496,4 @@ public class Robot extends TimedRobot {
     }
 
   }
+}
