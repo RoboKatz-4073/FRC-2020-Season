@@ -314,11 +314,11 @@ public class Robot extends TimedRobot {
 
     }
 
-    if (m_buttonboi.getAButton()) {
+   /* if (m_buttonboi.getAButton()) {
 
     } else if (m_buttonboi.getXButton()) {
 
-    }
+    } */
     
   }
 
@@ -347,7 +347,7 @@ public class Robot extends TimedRobot {
       // Max Speed
       Speed = 1;
 
-    } else if (m_stickboi.getBumper(Hand.kRight)) {
+    } /* else if (m_stickboi.getBumper(Hand.kRight)) {
 
       // Spin
       //Spin.Spin180(1);
@@ -357,11 +357,7 @@ public class Robot extends TimedRobot {
       // Spin
       //Spin.Spin180(2);
 
-    } else if (Math.round(m_stickboi.getTriggerAxis(Hand.kRight)) == 1) {
-
-    } else if (Math.round(m_stickboi.getTriggerAxis(Hand.kRight)) == 1) {
-      
-    }
+    } */
 
     double Xstick = m_stickboi.getRawAxis(0) * Speed;
     double Ystick = m_stickboi.getRawAxis(1) * Speed;
