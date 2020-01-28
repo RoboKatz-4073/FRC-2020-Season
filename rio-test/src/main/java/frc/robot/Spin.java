@@ -1,10 +1,12 @@
-package frc.robot.commands;
+package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
 * Spin around command
@@ -27,93 +29,97 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Spin {
 
-    private static TalonSRX[] Motors;
+    private static TalonSRX RightFront;
+    private static TalonSRX RightBack;
+    private static TalonSRX LeftFront;
+    private static TalonSRX LeftBack;
 
-    private static AnalogGyro Gyro;
+    private static Gyro Gyro;
 
-    public static void addMotors(TalonSRX[] m_motors) {
-
-      Motors[0] = m_motors[0];
-      Motors[1] = m_motors[1];
-      Motors[2] = m_motors[2];
-      Motors[3] = m_motors[3];
-
-    }
-
-    public static void addGyro(AnalogGyro m_gyro) {
+    public static void addGyro(Gyro m_gyro) {
 
       Gyro = m_gyro;
 
     }
 
-    public static void Spin180(int direction) {
-        
-      Gyro.reset();
+    public static void addMotors(TalonSRX RF, TalonSRX RB, TalonSRX LF, TalonSRX LB) {
 
+      RightFront = RF;
+      RightBack = RB;
+      LeftFront = LF;
+      LeftBack = LB;
+
+    }
+
+    public static void turnAngle(double speed, double angle) {
+        
       double startAngle = Gyro.getAngle();
+      double trueAngle  = startAngle + angle;
+      double angleLeft  = -startAngle + trueAngle;
 
-      // Spins around 180 Degrees
-      if (direction == 1) {
+  while (angleLeft > 3 || angleLeft < -3) {
 
-        // Activates all right motors
-        while(Math.round(startAngle + Gyro.getAngle()) == 180) {
+      if (angleLeft >= 30 || angleLeft <= -30) {
 
-          Motors[0].set(ControlMode.PercentOutput, 1);
-          Motors[2].set(ControlMode.PercentOutput, 1);
+        SmartDashboard.putNumber("Angle Left", angleLeft);
 
-          Timer.delay(0.005);
+        if (angleLeft < 0) {
+
+        RightFront.set(ControlMode.PercentOutput, -speed);
+        LeftFront.set(ControlMode.PercentOutput, -speed);
+        RightBack.set(ControlMode.PercentOutput, -speed);
+        LeftBack.set(ControlMode.PercentOutput, -speed);
+
+        } else if (angleLeft > 0) {
+
+        RightFront.set(ControlMode.PercentOutput, speed);
+        LeftFront.set(ControlMode.PercentOutput, speed);
+        RightBack.set(ControlMode.PercentOutput, speed);
+        LeftBack.set(ControlMode.PercentOutput, speed);
+
+          }
+
+      angleLeft = -Gyro.getAngle() + trueAngle;
+
+      }
+
+      if (angleLeft <= 40 && angleLeft >= -40) {
+
+        SmartDashboard.putNumber("Angle Left", angleLeft);
+
+        if (angleLeft < 0) {
+
+        RightFront.set(ControlMode.PercentOutput, -(speed / (5.5 + (angleLeft / 10)) + 0.2));
+        LeftFront.set(ControlMode.PercentOutput, -(speed / (5.5 + (angleLeft / 10)) + 0.2));
+        RightBack.set(ControlMode.PercentOutput, -(speed / (5.5 + (angleLeft / 10)) + 0.2));
+        LeftBack.set(ControlMode.PercentOutput, -(speed / (5.5 + (angleLeft / 10)) + 0.2));
+
+        } else if (angleLeft > 0) {
+
+        RightFront.set(ControlMode.PercentOutput, (speed / (5.5 - angleLeft / 10) + 0.2));
+        LeftFront.set(ControlMode.PercentOutput, (speed / (5.5 - angleLeft / 10) + 0.2));
+        RightBack.set(ControlMode.PercentOutput, (speed / (5.5 - angleLeft / 10) + 0.2));
+        LeftBack.set(ControlMode.PercentOutput, (speed / (5.5 - angleLeft / 10) + 0.2));
+
+          }
+
+      angleLeft = -Gyro.getAngle() + trueAngle;
+
 
         }
-  
-      } else if (direction == 2) {
-  
-        // Activates all left motors
-        while(Math.round(startAngle - Gyro.getAngle()) == -180) {
 
-          Motors[1].set(ControlMode.PercentOutput, 1);
-          Motors[3].set(ControlMode.PercentOutput, 1);
+      }
 
-          Timer.delay(0.005);
+
+            RightFront.set(ControlMode.PercentOutput, 0);
+            LeftFront.set(ControlMode.PercentOutput, 0);
+            RightBack.set(ControlMode.PercentOutput, 0);
+            LeftBack.set(ControlMode.PercentOutput, 0);
+
+            return;
+
 
         }
         
   
       }
-    }
-
-    public static void Spin90(int direction) {
-        
-    Gyro.reset();
-
-    double startAngle = Gyro.getAngle();
-
-    // Spins around 90 Degrees
-    if (direction == 1) {
-
-      // Activates all right motors
-      while(Math.round(startAngle + Gyro.getAngle()) == 90) {
-
-        Motors[0].set(ControlMode.PercentOutput, 1);
-        Motors[1].set(ControlMode.PercentOutput, 1);
-
-        Timer.delay(0.005);
-
-      }
-      
-
-    } else if (direction == 2) {
-
-      // Activates all left motors
-      while(Math.round(startAngle + Gyro.getAngle()) == 90) {
-
-        Motors[0].set(ControlMode.PercentOutput, 1);
-        Motors[1].set(ControlMode.PercentOutput, 1);
-
-        Timer.delay(0.005);
-
-      }
-
-    }
-  }
-
-}

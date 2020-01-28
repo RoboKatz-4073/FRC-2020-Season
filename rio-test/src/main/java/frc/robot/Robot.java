@@ -13,24 +13,38 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import java.util.concurrent.TimeUnit;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.util.Color;
 
 import com.revrobotics.ColorSensorV3;
 
 public class Robot extends TimedRobot {
+  public double gyro = 0;
+
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
+  private static final String kTurnAuto = "Gyro";
   private String m_autoSelected;
+
+  private static final String kblue = "Blue";
+  private static final String kgreen = "Green";
+  private static final String kred = "Red";
+  private static final String kyellow = "Yellow";
+  private String colorScelected;
+
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<String> m_color = new SendableChooser<>();
 
   // Xbox Controller
   private XboxController m_stickboi;
@@ -46,48 +60,59 @@ public class Robot extends TimedRobot {
 
   // Create Talon SRX Motor Controller Objects
   TalonSRX RightFront = new TalonSRX(4);
-  TalonSRX LeftFront  = new TalonSRX(1); 
-  TalonSRX RightBack  = new TalonSRX(2); 
-  TalonSRX LeftBack   = new TalonSRX(3); 
+  TalonSRX LeftFront = new TalonSRX(1);
+  TalonSRX RightBack = new TalonSRX(2);
+  TalonSRX LeftBack = new TalonSRX(3);
 
   public double Red;
   public double Blue;
   public double Green;
   public String colorboi;
 
-  // Create Color Sensor Object  **THIS IS TEMPORARY)
+  public Boolean james = true;
+  public double heading = 0;
+
+  // Create Color Sensor Object **THIS IS TEMPORARY)
   public final ColorSensorV3 m_Color = new ColorSensorV3(i2cPort);
 
   // Sensors
-  private AnalogGyro m_locationboi;
+  public Gyro m_locationboi;
 
   // Operation mode
   private double operationMode = 1;
 
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("gyro Auto", kTurnAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
+    m_color.setDefaultOption("Blue", kblue);
+    m_color.addOption("Green", kgreen);
+    m_color.addOption("Red", kred);
+    m_color.addOption("Yellow", kyellow);
+    SmartDashboard.putData("Colorchoice", m_color);
+
     // Initialize Controllers
-    m_stickboi    = new XboxController(0);
+    m_stickboi = new XboxController(0);
     m_bigstickboi = new Joystick(1);
-    m_buttonboi   = new XboxController(2);
+    m_buttonboi = new XboxController(2);
 
     // Create Gyro
-    m_locationboi = new AnalogGyro(0);
-  
-    // Initialize Gyro
-    m_locationboi.initGyro();
+    m_locationboi = new ADXRS450_Gyro();
+
+    // Initialize Gyro\
     m_locationboi.calibrate();
+    heading = m_locationboi.getAngle();
 
     // Add Gyro to Spin
-    //Spin.addGyro(m_locationboi);
+    Spin.addGyro(m_locationboi);
+    Spin.addMotors(RightFront, RightBack, LeftFront, LeftBack);
 
     // Set Output Levels
     RightFront.set(ControlMode.PercentOutput, 0);
@@ -98,12 +123,13 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -111,25 +137,25 @@ public class Robot extends TimedRobot {
     // Grab color
     Color dColor = m_Color.getColor();
 
-    Red   = dColor.red;
-    Blue  = dColor.blue;
+    Red = dColor.red;
+    Blue = dColor.blue;
     Green = dColor.green;
 
     if (Red <= 0.23 && Green >= 0.5 && Blue >= 0.19) {
 
-     colorboi = "Green";
+      colorboi = "Green";
 
     } else if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
 
-     colorboi = "Blue";
+      colorboi = "Blue";
 
     } else if (Red >= 0.4 && Green >= 0.3 && Green <= 0.45 && Blue <= 0.19) {
 
-     colorboi = "Red";
+      colorboi = "Red";
 
     } else if (Red >= 0.27 && Green >= 0.5 && Blue >= 0.09 && Blue <= 0.18) {
 
-     colorboi = "Yellow";
+      colorboi = "Yellow";
 
     } else {
       colorboi = "Grey";
@@ -140,24 +166,32 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Green", dColor.green);
     SmartDashboard.putNumber("Blue", dColor.blue);
 
+    gyro = heading - m_locationboi.getAngle();
+
+    SmartDashboard.putNumber("Gyro-thing", m_locationboi.getAngle());
+    SmartDashboard.putNumber("trueAngle", gyro);
+
     SmartDashboard.putString("Color", colorboi);
 
   }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
+   * between different autonomous modes using the dashboard. The sendable chooser
+   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+   * remove all of the chooser code and uncomment the getString line to get the
+   * auto name from the text box below the Gyro
    *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
+   * <p>
+   * You can add additional auto modes by adding additional comparisons to the
+   * switch structure below with additional strings. If using the SendableChooser
+   * make sure to add them to the chooser code above as well.
    */
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
+    colorScelected = m_color.getSelected();
+
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
 
@@ -169,13 +203,101 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
+    case kCustomAuto:
+
+      while (james) {
+
+        Color dColor = m_Color.getColor();
+
+        Red = dColor.red;
+        Blue = dColor.blue;
+        Green = dColor.green;
+
+        if (colorScelected == "Green") {
+          if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
+
+            james = false;
+
+          }
+        } else if (colorScelected == "Blue") {
+          if (Red <= 0.25 && Green <= 0.52 && Blue >= 0.34) {
+
+            james = false;
+
+          }
+
+        } else if (colorScelected == "Red") {
+          if (Red >= 0.4 && Green >= 0.3 && Green <= 0.45 && Blue <= 0.19) {
+
+            james = false;
+
+          }
+        } else if (colorScelected == "Yellow") {
+          if (Red >= 0.27 && Green >= 0.5 && Blue >= 0.09 && Blue <= 0.18) {
+
+            james = false;
+
+          }
+        }
+
+        RightFront.set(ControlMode.PercentOutput, 0.25);
+        LeftFront.set(ControlMode.PercentOutput, -0.25);
+        RightBack.set(ControlMode.PercentOutput, 0.25);
+        LeftBack.set(ControlMode.PercentOutput, -0.25);
+
+      }
+
+      RightFront.set(ControlMode.PercentOutput, 0);
+      LeftFront.set(ControlMode.PercentOutput, 0);
+      RightBack.set(ControlMode.PercentOutput, 0);
+      LeftBack.set(ControlMode.PercentOutput, 0);
+
+      break;
+
+      case kTurnAuto:
+
+      SmartDashboard.putNumber("antidisestablishmentarianism", 0);
+
+      Spin.turnAngle(0.65, 90);
+      
+      SmartDashboard.putNumber("antidisestablishmentarianism", 100);
+
+      try {
+        TimeUnit.SECONDS.sleep(2);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      Spin.turnAngle(0.65, -270);
+
+      try {
+        TimeUnit.SECONDS.sleep(2);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      Spin.turnAngle(0.65, 180);
+
+      try {
+        TimeUnit.SECONDS.sleep(100);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      RightFront.set(ControlMode.PercentOutput, 0);
+      LeftFront.set(ControlMode.PercentOutput, 0);
+      RightBack.set(ControlMode.PercentOutput, 0);
+      LeftBack.set(ControlMode.PercentOutput, 0);
+
+      break;
+
       case kDefaultAuto:
       default:
-        // Put default auto code here
-        break;
+
+      break;
     }
   }
 
