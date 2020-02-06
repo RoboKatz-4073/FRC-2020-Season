@@ -5,6 +5,11 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +33,11 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.util.Color;
 
 import com.revrobotics.ColorSensorV3;
+
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
+
+
 
 public class Robot extends TimedRobot {
   public double gyro = 0;
@@ -120,6 +130,15 @@ public class Robot extends TimedRobot {
     RightBack.set(ControlMode.PercentOutput, 0);
     LeftBack.set(ControlMode.PercentOutput, 0);
 
+   UsbCamera camera =  CameraServer.getInstance().startAutomaticCapture();
+   camera.setResolution(640, 480);
+
+   CvSink sink = CameraServer.getInstance().getVideo();
+   CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+
+  final Mat source = new Mat();
+  final Mat output = new Mat();
+
   }
 
   /**
@@ -133,6 +152,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    
 
     // Grab color
     Color dColor = m_Color.getColor();
@@ -615,3 +636,4 @@ public class Robot extends TimedRobot {
 
   }
 }
+

@@ -9,22 +9,10 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
-* Spin around command
 *
-* Pressing the buttons will run the command and completely turn the robot around
 *
-* 1 = Right
-* 2 = Left
+* @author hunterkuperman
 *
-* Please feel free to modify, share, and revise all code in this class
-* provided our name (FRC 4073), and all authors below are credited.
-*
-* @author josephtelaak
-* 
-* @date_created 1/15/2020
-* @date_modified 1/21/2020
-*
-* @revision 02
 **/
 
 public class Spin {
