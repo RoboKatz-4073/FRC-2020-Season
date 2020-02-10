@@ -60,9 +60,9 @@ public class Robot extends TimedRobot {
     }
 
     // Set up motors
-    RightFront = new TalonSRX(4);  //2
-    LeftFront = new TalonSRX(1);   //4
-    RightBack = new TalonSRX(2);   //1
+    RightFront = new TalonSRX(2);  //2
+    LeftFront = new TalonSRX(4);   //4
+    RightBack = new TalonSRX(1);   //1
     LeftBack = new TalonSRX(3);    //3
 
   }

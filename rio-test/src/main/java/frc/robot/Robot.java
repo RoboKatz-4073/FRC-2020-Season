@@ -7,6 +7,7 @@ package frc.robot;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.ImageSink;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -34,10 +35,10 @@ import edu.wpi.first.wpilibj.util.Color;
 
 import com.revrobotics.ColorSensorV3;
 
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
-
-
 
 public class Robot extends TimedRobot {
   public double gyro = 0;
@@ -130,15 +131,24 @@ public class Robot extends TimedRobot {
     RightBack.set(ControlMode.PercentOutput, 0);
     LeftBack.set(ControlMode.PercentOutput, 0);
 
-   UsbCamera camera =  CameraServer.getInstance().startAutomaticCapture();
-   camera.setResolution(640, 480);
+    // UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+
+    // CvSink sink = CameraServer.getInstance().getVideo();
+    // CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640,
+    // 480);
+
+    final Mat source = new Mat(640, 480, CvType.CV_64FC1);
+    source = ImageSink
+    final Mat output = new Mat();
+
+    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture("Hunter", 0);
+    camera.setResolution(640, 480);
 
    CvSink sink = CameraServer.getInstance().getVideo();
    CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+   
 
-  final Mat source = new Mat();
-  final Mat output = new Mat();
-
+   
   }
 
   /**
@@ -153,7 +163,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 
-    
+  outputStream.getVideo();
+
+  Core.inRange();
 
     // Grab color
     Color dColor = m_Color.getColor();
@@ -194,6 +206,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putString("Color", colorboi);
 
+    
   }
 
   /**
