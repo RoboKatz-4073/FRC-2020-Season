@@ -141,25 +141,7 @@ public class Robot extends TimedRobot {
 
     }
 
-    double Xstick = m_stickboi.getRawAxis(0) * Speed;
-    double Ystick = m_stickboi.getRawAxis(1) * Speed;
-
-     if (Ystick < 0.2 && Ystick > -0.2) {
-
-      Ystick = 0;
-
-    }
-
-    if (Xstick < 0.2 && Xstick > -0.2) {
-
-      Xstick = 0;
-
-    } 
-
-    RightFront.set(ControlMode.PercentOutput, Ystick + Xstick);
-    LeftFront.set(ControlMode.PercentOutput, -Ystick + Xstick);
-    RightBack.set(ControlMode.PercentOutput, Ystick + Xstick);
-    LeftBack.set(ControlMode.PercentOutput, -Ystick + Xstick);
+    
 
   }
 
