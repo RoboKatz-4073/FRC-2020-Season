@@ -12,7 +12,7 @@ public class ArcadeDriveCommand extends CommandBase {
     // Called just before this Command runs the first time
     public void initialize() {
 
-        Robot.m_drivetrain.SetPower(0, 0);
+        Robot.m_drivetrain.drive(0, 0);
 
     }
  
@@ -20,7 +20,9 @@ public class ArcadeDriveCommand extends CommandBase {
     public void execute() {
 
         double y = Robot.m_stickboi.getY();
-        Robot.m_drivetrain.SetPower(y, y);
+        double x = Robot.m_stickboi.getX();
+
+        Robot.m_drivetrain.drive(y, x);
 
     }
  
