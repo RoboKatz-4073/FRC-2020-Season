@@ -1,120 +1,120 @@
-package frc.robot.util;
+// package frc.robot.util;
 
-import java.io.IOException;
+// import java.io.IOException;
 
-/**
-* This is the class for communication with our various Raspberry Pi's
-*
-* Please feel free to modify, share, and revise all code in this class
-* provided our name (FRC 4073), and all authors below are credited.
-*
-* @author josephtelaak
-* 
-* @date_created 1/15/2020
-* @date_modified 1/16/2020
-*
-* @revision 01
-**/
+// /**
+// * This is the class for communication with our various Raspberry Pi's
+// *
+// * Please feel free to modify, share, and revise all code in this class
+// * provided our name (FRC 4073), and all authors below are credited.
+// *
+// * @author josephtelaak
+// * 
+// * @date_created 1/15/2020
+// * @date_modified 1/16/2020
+// *
+// * @revision 01
+// **/
 
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.connection.ConnectionException;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import net.schmizz.sshj.connection.channel.direct.Session.Command;
-import net.schmizz.sshj.transport.TransportException;
+// import net.schmizz.sshj.SSHClient;
+// import net.schmizz.sshj.connection.ConnectionException;
+// import net.schmizz.sshj.connection.channel.direct.Session;
+// import net.schmizz.sshj.connection.channel.direct.Session.Command;
+// import net.schmizz.sshj.transport.TransportException;
 
-public class RaspiCOMM {
+// public class RaspiCOMM {
 
-    private SSHClient ssh;
-    private Session session;
+//     private SSHClient ssh;
+//     private Session session;
 
-    private RaspberryPi pi;
+//     private RaspberryPi pi;
 
-    public RaspiCOMM(RaspberryPi pi) {
+//     public RaspiCOMM(RaspberryPi pi) {
 
-        // Create object
-        this.pi = pi;
+//         // Create object
+//         this.pi = pi;
 
-        // Establish Connection
-        initialize();
-    }
+//         // Establish Connection
+//         initialize();
+//     }
 
-    public RaspiCOMM(String userName, String password, String ipaddress) {
+//     public RaspiCOMM(String userName, String password, String ipaddress) {
 
-        // Create Raspberry Pi object
-        pi = new RaspberryPi(userName, password, ipaddress);
+//         // Create Raspberry Pi object
+//         pi = new RaspberryPi(userName, password, ipaddress);
 
-        // Establish connection
-        initialize();
+//         // Establish connection
+//         initialize();
 
-    }
+//     }
 
-    public RaspiCOMM(String userName, String password, String ipaddress, int SSH_Port) {
+//     public RaspiCOMM(String userName, String password, String ipaddress, int SSH_Port) {
 
-        // Create Raspberry Pi object
-        pi = new RaspberryPi(userName, password, ipaddress, SSH_Port);
+//         // Create Raspberry Pi object
+//         pi = new RaspberryPi(userName, password, ipaddress, SSH_Port);
 
-        // Establish connection
-        initialize();
+//         // Establish connection
+//         initialize();
 
-    }
+//     }
 
-    // Establish ssh session
-    private void initialize() {
+//     // Establish ssh session
+//     private void initialize() {
 
-        // Create client
-        ssh = new SSHClient();
+//         // Create client
+//         ssh = new SSHClient();
 
-        // Load information and connect
-        try {
+//         // Load information and connect
+//         try {
 
-            ssh.loadKnownHosts();
-            ssh.connect(pi.userName, pi.SSH_Port);
-            ssh.authPassword(pi.ipaddress, pi.password);
+//             ssh.loadKnownHosts();
+//             ssh.connect(pi.userName, pi.SSH_Port);
+//             ssh.authPassword(pi.ipaddress, pi.password);
 
-        } catch (IOException e) {
+//         } catch (IOException e) {
 
-            e.printStackTrace();
+//             e.printStackTrace();
 
-        }
+//         }
 
-    }
+//     }
 
-    // Disconnect from ssh session
-    public void disconnect() {
+//     // Disconnect from ssh session
+//     public void disconnect() {
 
-        // Disconnect Session
-        try {
+//         // Disconnect Session
+//         try {
 
-            session.close();
-            ssh.disconnect();
+//             session.close();
+//             ssh.disconnect();
             
-        } catch (TransportException | ConnectionException e) {
+//         } catch (TransportException | ConnectionException e) {
            
-            e.printStackTrace();
+//             e.printStackTrace();
         
-        } catch (IOException e) {
+//         } catch (IOException e) {
             
-            e.printStackTrace();
+//             e.printStackTrace();
             
-        }
+//         }
 
         
 
-    }
+//     }
 
-    // Pass through commands
-    public void sendCommand(String command) {
+//     // Pass through commands
+//     public void sendCommand(String command) {
 
-        // Run command
-        try {
+//         // Run command
+//         try {
 
-            session.exec(command);
+//             session.exec(command);
 
-        } catch (ConnectionException | TransportException e) {
+//         } catch (ConnectionException | TransportException e) {
 
-            e.printStackTrace();
+//             e.printStackTrace();
 
-        }
+//         }
 
-    }
-}
+//     }
+// }

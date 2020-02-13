@@ -1,94 +1,94 @@
-package frc.robot.commands;
+// package frc.robot.commands;
 
-/**
-* This is the class that controlls the R2-D2 beeping of our robot
-*
-* Please feel free to modify, share, and revise all code in this class
-* provided our name (FRC 4073), and all authors below are credited.
-*
-* @author josephtelaak
-* 
-* @date_created 1/15/2020
-* @date_modified 1/21/2020
-*
-* @revision 01
-**/
+// /**
+// * This is the class that controlls the R2-D2 beeping of our robot
+// *
+// * Please feel free to modify, share, and revise all code in this class
+// * provided our name (FRC 4073), and all authors below are credited.
+// *
+// * @author josephtelaak
+// * 
+// * @date_created 1/15/2020
+// * @date_modified 1/21/2020
+// *
+// * @revision 01
+// **/
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+// import java.util.Random;
+// import java.util.concurrent.TimeUnit;
 
-import frc.robot.util.RaspberryPi;
-import frc.robot.util.RaspiCOMM;
+// import frc.robot.util.RaspberryPi;
+// import frc.robot.util.RaspiCOMM;
 
-public class R2D2 {
+// public class R2D2 {
 
-    // Username and password for the r2d2 user on the pi
-    private final String userName = "r2d2";
-    private final String password = "Team4073!";
+//     // Username and password for the r2d2 user on the pi
+//     private final String userName = "r2d2";
+//     private final String password = "Team4073!";
 
-    // Pi communication class
-    public RaspiCOMM pi_comm;
+//     // Pi communication class
+//     public RaspiCOMM pi_comm;
 
-    // Thread to keep beeping controll separated
-    private Thread r2d2;
+//     // Thread to keep beeping controll separated
+//     private Thread r2d2;
 
-    // Constructor
-    public R2D2(RaspberryPi arg_pi) {
+//     // Constructor
+//     public R2D2(RaspberryPi arg_pi) {
 
-        RaspberryPi pi = arg_pi;
+//         RaspberryPi pi = arg_pi;
 
-        // Modify pi config for user
-        pi.setUser(userName);
-        pi.setPassword(password);
+//         // Modify pi config for user
+//         pi.setUser(userName);
+//         pi.setPassword(password);
 
-        // Establish connection
-        pi_comm = new RaspiCOMM(pi);
+//         // Establish connection
+//         pi_comm = new RaspiCOMM(pi);
 
-        // Beep-beep thread
-        r2d2 = new Thread(() -> {
+//         // Beep-beep thread
+//         r2d2 = new Thread(() -> {
 
-            // Creates object for random integer
-            Random rand = new Random(30);
+//             // Creates object for random integer
+//             Random rand = new Random(30);
 
-            // Loop
-            while (r2d2.isAlive()) {
+//             // Loop
+//             while (r2d2.isAlive()) {
 
-                // Start beep-booooop
-                beepboop();
+//                 // Start beep-booooop
+//                 beepboop();
 
-                try {
+//                 try {
 
-                    // Wait
-                    TimeUnit.SECONDS.wait((long) rand.nextInt());
+//                     // Wait
+//                     TimeUnit.SECONDS.wait((long) rand.nextInt());
 
-                } catch (InterruptedException e) {
+//                 } catch (InterruptedException e) {
 
-                }
+//                 }
 
-            }
+//             }
 
-        });
+//         });
 
-        // Enable thread
-        r2d2.run();
+//         // Enable thread
+//         r2d2.run();
 
-    }
+//     }
 
-    public void stop() {
+//     public void stop() {
 
-        // Kill thread
-        r2d2.interrupt();
+//         // Kill thread
+//         r2d2.interrupt();
 
-        // Stop ssh connection
-        pi_comm.disconnect();
+//         // Stop ssh connection
+//         pi_comm.disconnect();
 
-    }
+//     }
 
-    public void beepboop() {
+//     public void beepboop() {
 
-        // Send beepboop
-        pi_comm.sendCommand("mplayer r2d2.ogg");
+//         // Send beepboop
+//         pi_comm.sendCommand("mplayer r2d2.ogg");
 
-    }
+//     }
 
-}
+// }
