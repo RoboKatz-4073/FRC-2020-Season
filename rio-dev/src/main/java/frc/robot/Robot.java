@@ -16,61 +16,81 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ColorSpin;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Gyroscope;
 import frc.robot.Constants;
+import frc.robot.commands.CloseAuto;
+import frc.robot.commands.FarAuto;
+import frc.robot.commands.PutColor;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
-  // Subsystems
-  public static DriveTrain m_drivetrain;
-  public static GyroSystem m_gyro;
-  public static ColorSpin m_colorspinner;
-
   // Controllers
   public static XboxController m_stickboi;
   public static Joystick m_bigstickboi;
   public static XboxController m_buttonboi;
 
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private static final String kTurnAuto = "Gyro";
+  private static final String kDefaultAuto = "Close Auto";
+  private static final String kCustomAuto = "Far Auto";
   private String m_autoSelected;
 
-  // Colors 
+  // Colors
   private static final String kblue = "Blue";
   private static final String kgreen = "Green";
   private static final String kred = "Red";
   private static final String kyellow = "Yellow";
-  private String colorScelected;
 
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private final SendableChooser<String> m_color = new SendableChooser<>();
+
+  public static DriveTrain m_drivetrain;
+  public static Gyroscope m_gyro;
+  public static ColorSpin m_colorspinner;
+
+  public static Command m_putcolor;
+  public static Command m_closeauto;
+  public static Command m_farauto;
 
   /**
    * Initialization code.
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    m_chooser.addOption("Gyro Auto", kTurnAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
 
-    m_color.setDefaultOption("Blue", kblue);
+    m_drivetrain = new DriveTrain();
+    m_gyro = new Gyroscope();
+    m_colorspinner = new ColorSpin();
+    // private final BallArm m_ballarm;
+    // private final Launcher m_launcher;
+
+    m_putcolor = new PutColor(m_colorspinner);
+    m_closeauto = new CloseAuto(m_drivetrain);
+    m_farauto = new FarAuto(m_drivetrain);
+
+    m_chooser.setDefaultOption("Close Auto", kDefaultAuto);
+    m_chooser.addOption("Far Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
 
     m_robotContainer = new RobotContainer();
 
-    // Subsystems
-    m_drivetrain = new DriveTrain();
-    m_gyro = new GyroSystem();
-    m_colorspinner = new ColorSpin();
+    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture("Hunter", 0);
+    camera.setResolution(640, 480);
+
+    Gyroscope.m_locationboi.calibrate();
 
   }
 
@@ -82,7 +102,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putData("Color", PutColor.getColor());
+    SmartDashboard.putString("Color", PutColor.Color());
 
   }
 
@@ -98,19 +118,17 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
 
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autoSelected = m_chooser.getSelected();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      
-      m_autonomousCommand.schedule();
+    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + m_autoSelected);
 
-    }
   }
 
   /**
@@ -118,25 +136,40 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+
+    switch (m_autoSelected) {
+    case kCustomAuto:
+
+      try {
+        FarAuto.Run();
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      break;
+
+    case kDefaultAuto:
+
+      try {
+       CloseAuto.Run();
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+  
+        break;
+    }
+
   }
 
   @Override
   public void teleopInit() {
-    
-    if (m_autonomousCommand != null) {
-
-      m_autonomousCommand.cancel();
-
-    }
 
     // Controllers
-    m_stickboi = new XboxController(m_stickboiport);
-    m_bigstickboi = new Joystick(m_bigstickboiport);
-    m_buttonboi = new XboxController(m_buttonboiport);
-
-    // Initialize Gyro\
-    m_locationboi.calibrate();
-    heading = m_locationboi.getAngle();
+    m_stickboi = new XboxController(Constants.m_stickboiport);
+    m_bigstickboi = new Joystick(Constants.m_bigstickboiport);
+    m_buttonboi = new XboxController(Constants.m_buttonboiport);
 
   }
 
@@ -197,7 +230,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // Controllers
-    m_stickboi = new XboxController(m_stickboiport);
+    m_stickboi = new XboxController(Constants.m_stickboiport);
 
   }
 

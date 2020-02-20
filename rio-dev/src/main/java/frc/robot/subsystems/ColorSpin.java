@@ -1,5 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.ColorSensorV3;
+
+import frc.robot.Constants;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 public class ColorSpin extends SubsystemBase {
 
     // I2C Port on the RoboRIO
@@ -10,13 +18,13 @@ public class ColorSpin extends SubsystemBase {
 
     public static TalonSRX m_colorSpinMotor;
 
-    public ColorSpin(int CAN_ColorSpin) {
+    public ColorSpin() {
 
         i2cPort = I2C.Port.kOnboard;
 
-        m_color = new ColorSensorV3(i2cPort);
+        m_Color = new ColorSensorV3(i2cPort);
 
-        m_colorSpinMotor = TalonSRX(CAN_ColorSpin);
+        m_colorSpinMotor = new TalonSRX(Constants.CAN_ColorSpin);
     }
 
 }

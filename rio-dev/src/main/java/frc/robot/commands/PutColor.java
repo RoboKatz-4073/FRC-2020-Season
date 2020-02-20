@@ -1,8 +1,21 @@
-package frc.root.commands;
+package frc.robot.commands;
 
-public class PutColor {
+import com.revrobotics.ColorSensorV3;
 
-    public static String getColor() {
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ColorSpin;
+
+public class PutColor extends CommandBase {
+
+    public PutColor(ColorSpin m_colorspinner) {
+	}
+
+	public static String Color() {
+    
+      ColorSensorV3 m_Color = ColorSpin.m_Color;
+
     // Grab color
     Color dColor = m_Color.getColor();
 

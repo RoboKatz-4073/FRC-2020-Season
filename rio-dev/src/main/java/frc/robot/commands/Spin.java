@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Gyroscope;
 
 /**
 * Spin around command
@@ -17,6 +20,7 @@ import edu.wpi.first.wpilibj.Timer;
 * Please feel free to modify, share, and revise all code in this class
 * provided our name (FRC 4073), and all authors below are credited.
 *
+* @author hunterkuperman
 * @author josephtelaak
 * 
 * @date_created 1/15/2020
@@ -29,7 +33,7 @@ public class Spin {
 
   public static void turnAngle(double speed, double angle) {
       
-    double startAngle = GyroSystem.m_locationboi.getAngle();
+    double startAngle = Gyroscope.m_locationboi.getAngle();
     double trueAngle  = startAngle + angle;
     double angleLeft  = -startAngle + trueAngle;
 
@@ -57,7 +61,7 @@ public class Spin {
 
       }
 
-      angleLeft = -GyroSystem.m_locationboi.getAngle() + trueAngle;
+      angleLeft = -Gyroscope.m_locationboi.getAngle() + trueAngle;
 
       if (angleLeft <= 40 && angleLeft >= -40) {
 
@@ -80,7 +84,7 @@ public class Spin {
         }
       }
 
-      angleLeft = -GyroSystem.m_locationboi.getAngle() + trueAngle;
+      angleLeft = -Gyroscope.m_locationboi.getAngle() + trueAngle;
 
       DriveTrain.m_rightFrontMotor.set(ControlMode.PercentOutput, 0);
       DriveTrain.m_leftFrontMotor.set(ControlMode.PercentOutput, 0);
