@@ -33,6 +33,7 @@ import frc.robot.subsystems.ColorSpin;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gyroscope;
 import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.Winch;
 import frc.robot.Constants;
 import frc.robot.commands.CloseAuto;
 import frc.robot.commands.FarAuto;
@@ -58,6 +59,7 @@ public class Robot extends TimedRobot {
   public static ColorSpin m_colorspinner;
   public static BallArm   m_ballarm;
   public static Launcher  m_launcher;
+  public static Winch     m_winch;
 
   public static Command m_putcolor;
   public static Command m_closeauto;
@@ -77,6 +79,7 @@ public class Robot extends TimedRobot {
     m_colorspinner = new ColorSpin();
     m_ballarm = new BallArm();
     m_launcher = new Launcher();
+    m_winch = new Winch();
 
     m_putcolor = new PutColor(m_colorspinner);
     m_closeauto = new CloseAuto(m_drivetrain);
@@ -178,6 +181,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+  if (m_buttonboi.getBumper(Hand.kRight)) {
+    Winch.m_winch.set(ControlMode.PercentOutput, 1);
+  } else if (m_buttonboi.getTriggerAxis(Hand.kRight) > 0.5) {
+    Winch.m_winch.set(ControlMode.PercentOutput, -1);
+  } else {
+    Winch.m_winch.set(ControlMode.PercentOutput, 0);
+  }
+
   if (m_buttonboi.getXButtonPressed()) {
     drivemode = true;
     shootmode = false;
@@ -192,9 +203,11 @@ public class Robot extends TimedRobot {
       
     SmartDashboard.putString("Mode", "Shoot Mode");
 
-    boolean opbutton = m_bigstickboi.getRawButton(11);
-    boolean clbutton = m_bigstickboi.getRawButton(10);
+//    boolean opbutton = m_bigstickboi.getRawButton(11);
+//    boolean clbutton = m_bigstickboi.getRawButton(10);
     boolean shootbutton = m_bigstickboi.getRawButton(1);
+
+      Launcher.m_launcher.set(ControlMode.PercentOutput, 0);
 
       if (shootbutton) {
         Launcher.m_launcher.set(ControlMode.PercentOutput, 1);
@@ -209,11 +222,14 @@ public class Robot extends TimedRobot {
     double lt = m_stickboi.getTriggerAxis(Hand.kLeft);
     double rt = m_stickboi.getTriggerAxis(Hand.kRight);
 
+    BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
+
     if (lt > 0.5 || rt > 0.5) {
       BallArm.m_ballarm.set(ControlMode.PercentOutput, 1);
     } else {
       BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
     }
+
 
     if (y < 0.2 && y > -0.2) {
       y = 0;
@@ -260,48 +276,5 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-
-    double y = m_stickboi.getY();
-    double x = m_stickboi.getX();
-
-    if (y < 0.2 && y > -0.2) {
-
-      y = 0;
-
-    } 
-    
-    if (x < 0.2 && x > -0.2) {
-
-      x = 0;
-
     }
-
-    double Speed = 0.50;
-
-    // Macros
-    if (m_stickboi.getYButton()) {
-
-      // 15% Speed
-      Speed = 0.50;
-
-    } else if (m_stickboi.getBButton()) {
-
-      // 25% Speed
-      Speed = 0.25;
-
-    } else if (m_stickboi.getAButton()) {
-
-      // 75% Speed
-      Speed = 0.15;
-
-    } else if (m_stickboi.getXButton()) {
-
-      // Max Speed
-      Speed = 1;
-
-    }
-
-    m_drivetrain.drive(Speed * y, Speed * x);
-
-  }
 }

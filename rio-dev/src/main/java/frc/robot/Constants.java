@@ -17,6 +17,10 @@ public final class Constants {
     public static final int CAN_LB = 3;  // Rear Left
     public static final int CAN_RB = 1;  // Rear Right
 
+    public static final int CAN_Intake   = 7;
+    public static final int CAN_Launcher = 8;
+    public static final int CAN_Winch    = 5;
+
     public static final int CAN_ColorSpin = 9;
 
     // Controller Ports
