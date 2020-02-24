@@ -16,27 +16,29 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.BallArm;
 import frc.robot.subsystems.ColorSpin;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gyroscope;
+import frc.robot.subsystems.Launcher;
 import frc.robot.Constants;
 import frc.robot.commands.CloseAuto;
 import frc.robot.commands.FarAuto;
 import frc.robot.commands.PutColor;
 
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
 
@@ -49,21 +51,20 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "Far Auto";
   private String m_autoSelected;
 
-  // Colors
-  private static final String kblue = "Blue";
-  private static final String kgreen = "Green";
-  private static final String kred = "Red";
-  private static final String kyellow = "Yellow";
-
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   public static DriveTrain m_drivetrain;
   public static Gyroscope m_gyro;
   public static ColorSpin m_colorspinner;
+  public static BallArm   m_ballarm;
+  public static Launcher  m_launcher;
 
   public static Command m_putcolor;
   public static Command m_closeauto;
   public static Command m_farauto;
+
+  boolean drivemode = true;
+  boolean shootmode = false;
 
   /**
    * Initialization code.
@@ -74,8 +75,8 @@ public class Robot extends TimedRobot {
     m_drivetrain = new DriveTrain();
     m_gyro = new Gyroscope();
     m_colorspinner = new ColorSpin();
-    // private final BallArm m_ballarm;
-    // private final Launcher m_launcher;
+    m_ballarm = new BallArm();
+    m_launcher = new Launcher();
 
     m_putcolor = new PutColor(m_colorspinner);
     m_closeauto = new CloseAuto(m_drivetrain);
@@ -143,7 +144,6 @@ public class Robot extends TimedRobot {
       try {
         FarAuto.Run();
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
 
@@ -154,7 +154,6 @@ public class Robot extends TimedRobot {
       try {
        CloseAuto.Run();
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
   
@@ -179,49 +178,71 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+  if (m_buttonboi.getXButtonPressed()) {
+    drivemode = true;
+    shootmode = false;
+  }
+
+  if (m_buttonboi.getAButtonPressed()) {
+    shootmode = true;
+    drivemode = false;
+  }
+
+    if (shootmode) {
+      
+    SmartDashboard.putString("Mode", "Shoot Mode");
+
+    boolean opbutton = m_bigstickboi.getRawButton(11);
+    boolean clbutton = m_bigstickboi.getRawButton(10);
+    boolean shootbutton = m_bigstickboi.getRawButton(1);
+
+      if (shootbutton) {
+        Launcher.m_launcher.set(ControlMode.PercentOutput, 1);
+      }
+
+    } else {
+
+    SmartDashboard.putString("Mode", "Drive Mode");
+
     double y = m_stickboi.getY();
     double x = m_stickboi.getX();
+    double lt = m_stickboi.getTriggerAxis(Hand.kLeft);
+    double rt = m_stickboi.getTriggerAxis(Hand.kRight);
+
+    if (lt > 0.5 || rt > 0.5) {
+      BallArm.m_ballarm.set(ControlMode.PercentOutput, 1);
+    } else {
+      BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
+    }
 
     if (y < 0.2 && y > -0.2) {
-
       y = 0;
-
     } 
     
     if (x < 0.2 && x > -0.2) {
-
       x = 0;
-
     }
 
     double Speed = 0.50;
 
     // Macros
     if (m_stickboi.getYButton()) {
-
       // 15% Speed
       Speed = 0.50;
-
     } else if (m_stickboi.getBButton()) {
-
       // 25% Speed
       Speed = 0.25;
-
     } else if (m_stickboi.getAButton()) {
-
       // 75% Speed
-      Speed = 0.15;
-
+      Speed = 0.75;
     } else if (m_stickboi.getXButton()) {
-
       // Max Speed
       Speed = 1;
-
     }
 
     m_drivetrain.drive(Speed * y, Speed * x);
-
   }
+}
 
   @Override
   public void testInit() {
