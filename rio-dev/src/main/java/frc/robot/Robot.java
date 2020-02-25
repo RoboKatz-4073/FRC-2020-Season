@@ -181,9 +181,18 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-  if (m_buttonboi.getBumper(Hand.kRight)) {
+  Launcher.m_opengate.set(m_bigstickboi.getRawButton(11));
+  Launcher.m_closegate.set(m_bigstickboi.getRawButton(10));
+
+  ColorSpin.m_downwheel.set(m_bigstickboi.getRawButton(7));
+  ColorSpin.m_upwheel.set(m_bigstickboi.getRawButton(5));
+
+  Winch.m_upwinch.set(m_bigstickboi.getRawButton(9));
+  Winch.m_downwinch.set(m_bigstickboi.getRawButton(10)); 
+
+  if (m_bigstickboi.getRawButton(6)) {
     Winch.m_winch.set(ControlMode.PercentOutput, 1);
-  } else if (m_buttonboi.getTriggerAxis(Hand.kRight) > 0.5) {
+  } else if (m_bigstickboi.getRawButton(8)) {
     Winch.m_winch.set(ControlMode.PercentOutput, -1);
   } else {
     Winch.m_winch.set(ControlMode.PercentOutput, 0);
@@ -203,8 +212,6 @@ public class Robot extends TimedRobot {
       
     SmartDashboard.putString("Mode", "Shoot Mode");
 
-//    boolean opbutton = m_bigstickboi.getRawButton(11);
-//    boolean clbutton = m_bigstickboi.getRawButton(10);
     boolean shootbutton = m_bigstickboi.getRawButton(1);
 
       Launcher.m_launcher.set(ControlMode.PercentOutput, 0);
@@ -217,8 +224,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putString("Mode", "Drive Mode");
 
-    double y = m_stickboi.getY();
-    double x = m_stickboi.getX();
     double lt = m_stickboi.getTriggerAxis(Hand.kLeft);
     double rt = m_stickboi.getTriggerAxis(Hand.kRight);
 
@@ -230,14 +235,6 @@ public class Robot extends TimedRobot {
       BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
     }
 
-
-    if (y < 0.2 && y > -0.2) {
-      y = 0;
-    } 
-    
-    if (x < 0.2 && x > -0.2) {
-      x = 0;
-    }
 
     double Speed = 0.50;
 
@@ -256,7 +253,27 @@ public class Robot extends TimedRobot {
       Speed = 1;
     }
 
-    m_drivetrain.drive(Speed * y, Speed * x);
+    double Xstick = m_stickboi.getRawAxis(0) * Speed;
+    double Ystick = m_stickboi.getRawAxis(1) * Speed;
+
+     if (Ystick < 0.2 && Ystick > -0.2) {
+
+      Ystick = 0;
+
+    }
+
+    if (Xstick < 0.2 && Xstick > -0.2) {
+
+      Xstick = 0;
+
+    }
+
+    DriveTrain.m_rightFrontMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
+    DriveTrain.m_rightBackMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
+    DriveTrain.m_leftFrontMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
+    DriveTrain.m_leftBackMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
+
+
   }
 }
 

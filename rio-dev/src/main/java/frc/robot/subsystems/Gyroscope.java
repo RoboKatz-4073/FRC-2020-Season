@@ -7,7 +7,7 @@ public class Gyroscope extends SubsystemBase {
 
     public static ADXRS450_Gyro m_locationboi;
 
-    public void Gyro() {
+    public Gyroscope() {
 
         // Create Gyro
         m_locationboi = new ADXRS450_Gyro();
