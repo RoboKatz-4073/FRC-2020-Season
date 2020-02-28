@@ -17,11 +17,23 @@ public final class Constants {
     public static final int CAN_LB = 3;  // Rear Left
     public static final int CAN_RB = 1;  // Rear Right
 
+    public static final int CAN_Spare = 6;
+
     public static final int CAN_Intake   = 7;
     public static final int CAN_Launcher = 8;
     public static final int CAN_Winch    = 5;
 
     public static final int CAN_ColorSpin = 9;
+
+    // Solenoid port values
+    public static final int SOLENOID_WheelUp = 0;
+    public static final int SOLENOID_WheelDown = 1;
+
+    public static final int SOLENOID_ClimberUp = 2;
+    public static final int SOLENOID_ClimberDown = 3;
+
+    public static final int SOLENOID_CloseGate = 4;
+    public static final int SOLENOID_OpenGate = 5;
 
     // Controller Ports
     public static final int m_stickboiport = 0;

@@ -14,8 +14,9 @@ public class Launcher extends SubsystemBase {
 
     public Launcher () {
 
-        m_opengate  = new Solenoid(5);
-        m_closegate = new Solenoid(4);
+        m_opengate  = new Solenoid(Constants.SOLENOID_OpenGate);
+        m_closegate = new Solenoid(Constants.SOLENOID_CloseGate);
+        
         m_launcher  = new TalonSRX(Constants.CAN_Launcher);
 
     }

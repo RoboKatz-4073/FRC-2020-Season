@@ -9,35 +9,40 @@
 * @author hunterkuperman
 * 
 * @date_created 1/4/2020
-* @date_modified 1/15/2020
+* @date_modified 2/28/2020
 *
-* @revision 05
+* @revision 09
 **/
 
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.BallArm;
-import frc.robot.subsystems.ColorSpin;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ControlWheel;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Gyroscope;
 import frc.robot.subsystems.Launcher;
-import frc.robot.subsystems.Winch;
+
 import frc.robot.Constants;
+
 import frc.robot.commands.CloseAuto;
 import frc.robot.commands.FarAuto;
-import frc.robot.commands.PutColor;
+import frc.robot.commands.MOTD;
 
 public class Robot extends TimedRobot {
 
@@ -56,17 +61,17 @@ public class Robot extends TimedRobot {
 
   public static DriveTrain m_drivetrain;
   public static Gyroscope m_gyro;
-  public static ColorSpin m_colorspinner;
-  public static BallArm   m_ballarm;
-  public static Launcher  m_launcher;
-  public static Winch     m_winch;
+  public static ControlWheel m_controlwheel;
+  public static BallArm m_ballarm;
+  public static Launcher m_launcher;
+  public static Climber m_climber;
 
-  public static Command m_putcolor;
   public static Command m_closeauto;
   public static Command m_farauto;
 
-  boolean drivemode = true;
-  boolean shootmode = false;
+  public static Compressor compresser;
+
+  private double Speed = .50;
 
   /**
    * Initialization code.
@@ -74,14 +79,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    MOTD.print();
+
+    compresser = new Compressor(0);
+    
+    compresser.start();
+
     m_drivetrain = new DriveTrain();
     m_gyro = new Gyroscope();
-    m_colorspinner = new ColorSpin();
+    m_controlwheel = new ControlWheel();
     m_ballarm = new BallArm();
     m_launcher = new Launcher();
-    m_winch = new Winch();
+    m_climber = new Climber();
 
-    m_putcolor = new PutColor(m_colorspinner);
     m_closeauto = new CloseAuto(m_drivetrain);
     m_farauto = new FarAuto(m_drivetrain);
 
@@ -91,10 +101,19 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture("Hunter", 0);
+    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture("Front Camera", 0);
     camera.setResolution(640, 480);
 
     Gyroscope.m_locationboi.calibrate();
+
+    Launcher.m_opengate.set(false);
+    Launcher.m_closegate.set(true);
+
+    ControlWheel.m_downwheel.set(true);
+    ControlWheel.m_upwheel.set(false);
+
+    Climber.m_upwinch.set(false);
+    Climber.m_downwinch.set(true);
 
   }
 
@@ -106,7 +125,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putString("Color", PutColor.Color());
+    SmartDashboard.putString("Color", ControlWheel.getAsString(ControlWheel.getColor()));
 
   }
 
@@ -173,6 +192,8 @@ public class Robot extends TimedRobot {
     m_bigstickboi = new Joystick(Constants.m_bigstickboiport);
     m_buttonboi = new XboxController(Constants.m_buttonboiport);
 
+    SmartDashboard.putString("FMS Color", ControlWheel.getAsString(ControlWheel.FMSColor));
+
   }
 
   /**
@@ -184,97 +205,105 @@ public class Robot extends TimedRobot {
   Launcher.m_opengate.set(m_bigstickboi.getRawButton(11));
   Launcher.m_closegate.set(m_bigstickboi.getRawButton(10));
 
-  ColorSpin.m_downwheel.set(m_bigstickboi.getRawButton(7));
-  ColorSpin.m_upwheel.set(m_bigstickboi.getRawButton(5));
+  ControlWheel.m_downwheel.set(m_buttonboi.getRawButton(7));
+  ControlWheel.m_upwheel.set(m_buttonboi.getRawButton(5));
 
-  Winch.m_upwinch.set(m_bigstickboi.getRawButton(9));
-  Winch.m_downwinch.set(m_bigstickboi.getRawButton(10)); 
+  Climber.m_upwinch.set(m_buttonboi.getRawButton(4));
+  Climber.m_downwinch.set(m_buttonboi.getRawButton(3));
 
-  if (m_bigstickboi.getRawButton(6)) {
-    Winch.m_winch.set(ControlMode.PercentOutput, 1);
-  } else if (m_bigstickboi.getRawButton(8)) {
-    Winch.m_winch.set(ControlMode.PercentOutput, -1);
+  if (m_buttonboi.getRawButton(6)) {
+
+    Climber.m_winch.set(ControlMode.PercentOutput, 1);
+
+  } else if (m_buttonboi.getRawButton(8)) {
+
+    Climber.m_winch.set(ControlMode.PercentOutput, -1);
+
+  } 
+
+  if (m_bigstickboi.getRawButton(1)) {
+
+    Launcher.m_launcher.set(ControlMode.PercentOutput, 1);
+
+  }
+
+  if (m_buttonboi.getRawButton(1)) {
+
+    ControlWheel.spinUntilFound();
+
+  } else if (m_buttonboi.getRawButton(2)) {
+
+    ControlWheel.m_colorSpinMotor.set(ControlMode.PercentOutput, 1);
+
   } else {
-    Winch.m_winch.set(ControlMode.PercentOutput, 0);
+
+    ControlWheel.m_colorSpinMotor.set(ControlMode.PercentOutput, 0);
+
   }
 
-  if (m_buttonboi.getXButtonPressed()) {
-    drivemode = true;
-    shootmode = false;
-  }
+  double lt = m_stickboi.getRawAxis(2);
+  double rt = m_stickboi.getRawAxis(3);
 
-  if (m_buttonboi.getAButtonPressed()) {
-    shootmode = true;
-    drivemode = false;
-  }
+  BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
 
-    if (shootmode) {
-      
-    SmartDashboard.putString("Mode", "Shoot Mode");
+  if (lt > 0.2 || rt > 0.2) {
 
-    boolean shootbutton = m_bigstickboi.getRawButton(1);
+    BallArm.m_ballarm.set(ControlMode.PercentOutput, 1);
 
-      Launcher.m_launcher.set(ControlMode.PercentOutput, 0);
-
-      if (shootbutton) {
-        Launcher.m_launcher.set(ControlMode.PercentOutput, 1);
-      }
-
-    } else {
-
-    SmartDashboard.putString("Mode", "Drive Mode");
-
-    double lt = m_stickboi.getTriggerAxis(Hand.kLeft);
-    double rt = m_stickboi.getTriggerAxis(Hand.kRight);
+  } else {
 
     BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
 
-    if (lt > 0.5 || rt > 0.5) {
-      BallArm.m_ballarm.set(ControlMode.PercentOutput, 1);
-    } else {
-      BallArm.m_ballarm.set(ControlMode.PercentOutput, 0);
-    }
+  }
 
+  Speed = 0.50;
 
-    double Speed = 0.50;
+  // Macros
+  if (m_stickboi.getYButton()) {
+    // 15% Speed
+    Speed = 0.50;
+  } else if (m_stickboi.getBButton()) {
+    // 25% Speed
+    Speed = 0.25;
+  } else if (m_stickboi.getAButton()) {
+    // 75% Speed
+    Speed = 0.75;
+  } else if (m_stickboi.getXButton()) {
+    // Max Speed
+    Speed = 1;
+  }
 
-    // Macros
-    if (m_stickboi.getYButton()) {
-      // 15% Speed
-      Speed = 0.50;
-    } else if (m_stickboi.getBButton()) {
-      // 25% Speed
-      Speed = 0.25;
-    } else if (m_stickboi.getAButton()) {
-      // 75% Speed
-      Speed = 0.75;
-    } else if (m_stickboi.getXButton()) {
-      // Max Speed
-      Speed = 1;
-    }
+  if (m_stickboi.getBumper(Hand.kRight)){
 
-    double Xstick = m_stickboi.getRawAxis(0) * Speed;
-    double Ystick = m_stickboi.getRawAxis(1) * Speed;
+    Gyroscope.turnAngle(Speed, 180);
 
-     if (Ystick < 0.2 && Ystick > -0.2) {
+  } else if (m_stickboi.getBumper(Hand.kLeft)) {
 
-      Ystick = 0;
-
-    }
-
-    if (Xstick < 0.2 && Xstick > -0.2) {
-
-      Xstick = 0;
-
-    }
-
-    DriveTrain.m_rightFrontMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
-    DriveTrain.m_rightBackMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
-    DriveTrain.m_leftFrontMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
-    DriveTrain.m_leftBackMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
-
+    Gyroscope.turnAngle(Speed, 90);
 
   }
+
+  double Xstick = m_stickboi.getRawAxis(4) * Speed;
+  double Ystick = m_stickboi.getRawAxis(1) * Speed;
+
+  if (Ystick < 0.2 && Ystick > -0.2) {
+
+    Ystick = 0;
+
+  }
+
+  if (Xstick < 0.2 && Xstick > -0.2) {
+
+    Xstick = 0;
+
+  }
+
+  DriveTrain.m_rightFrontMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
+  DriveTrain.m_rightBackMotor.set(ControlMode.PercentOutput, Ystick + Xstick);
+  DriveTrain.m_leftFrontMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
+  DriveTrain.m_leftBackMotor.set(ControlMode.PercentOutput, -Ystick + Xstick);
+
+  
 }
 
   @Override
@@ -293,5 +322,41 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+
+    Speed = 0.50;
+
+    // Macros
+    if (m_stickboi.getYButton()) {
+      // 15% Speed
+      Speed = 0.50;
+    } else if (m_stickboi.getBButton()) {
+      // 25% Speed
+      Speed = 0.25;
+    } else if (m_stickboi.getAButton()) {
+      // 75% Speed
+      Speed = 0.75;
+    } else if (m_stickboi.getXButton()) {
+      // Max Speed
+      Speed = 1;
     }
+
+    double Xstick = m_stickboi.getRawAxis(4) * Speed;
+    double Ystick = m_stickboi.getRawAxis(1) * Speed;
+
+     if (Ystick < 0.2 && Ystick > -0.2) {
+
+      Ystick = 0;
+
+    }
+
+    if (Xstick < 0.2 && Xstick > -0.2) {
+
+      Xstick = 0;
+
+    }
+
+    DriveTrain.rdrive(Ystick + Xstick);
+    DriveTrain.ldrive(-Ystick + Xstick);
+
+  }
 }
